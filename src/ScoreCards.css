@@ -1,0 +1,21 @@
+.card {
+    text-align: center;
+}
+.card.papers {
+    background-color: #1890ff;
+}
+.card.citations {
+    background-color: #faad14;
+}
+.card.national {
+    background-color: #ff4d4f;
+}
+.card.international {
+    background-color: #64b144;
+}
+.card .ant-typography {
+    color: #ffffff;
+}
+.card h2[class="ant-typography"] {
+    font-size: 40px;
+}
