@@ -1,0 +1,50 @@
+:root {
+  --headerBackgroundColor: #444342;
+  --headerColor: #1890ff;
+  --headerHeight: 40px;
+}
+
+.header-container {
+  color: var(--headerColor);
+  background-color: var(--headerBackgroundColor);
+}
+
+.header-news {
+  display: none;
+}
+
+.header-container header {
+  color: var(--headerColor);
+  background-color: var(--headerBackgroundColor);
+}
+
+.side-menu-icon {
+  margin-right: 5%;
+}
+
+.menu {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: var(--headerBackgroundColor);
+  border: 0;
+  line-height: 58px;
+  padding-top: 4px;
+  box-sizing: border-box;
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.search-container .ant-input {
+  color: var(--headerColor);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.search-container i {
+  color: var(--headerColor);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-container {
+    text-align: end;
+    flex-grow: 2;
+}
