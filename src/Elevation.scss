@@ -1,0 +1,27 @@
+@mixin elevation($dp){
+  transition: all 0.3s ease-in-out;
+  z-index: $dp * 2; //z index from 0 to 48 for internediate elements
+  $px: $dp + 0px;
+
+  @if $px == 0 {
+    box-shadow: none;
+  }
+  @else {
+    $blur: if($px == 1, 3px, $px * 2);
+    $amba: ($px + 1 + ($px / 9.38)) / 100;
+    $diry: if($dp < 10, if($px % 2 == 0, $px - (($px / 2) - 1), $px - ($px - 1) / 2 ), $px - 4);
+    $dira: (34 - (round($px / 10))) / 140;
+
+    box-shadow: 0 $px $blur rgba(0, 0, 0, $amba),
+                0 $diry $blur rgba(0, 0, 0, $dira),
+                0 0 4px rgba(0,0,0,0.05); //AMBIENT LIGHT
+  }
+}
+
+//CREATE ELEVATION FROM 0 TO 24dp
+@for $i from 0 through 24 {
+  .z-#{$i} {
+     @include elevation($i);
+   }
+}
+
