@@ -1,0 +1,14 @@
+.dashboard-container {
+    margin: 10px auto;
+}
+
+.dashboard-container > * {
+    margin-bottom: 16px;
+    /* border: 1px solid black; */
+}
+
+.card {
+    border: 0;
+    border-radius: 10px;
+    height: 140px;
+}
