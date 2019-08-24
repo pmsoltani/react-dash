@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Typography, Divider } from "antd";
+import { Row, Col, Layout, Typography, Divider } from "antd";
 import "./PageFooter.css";
 
 import elsametricLogo from "./assets/logo.svg";
@@ -8,12 +8,13 @@ import instagramLogo from "./assets/instagram.svg";
 import linkedinLogo from "./assets/linkedin.svg";
 import telegramLogo from "./assets/telegram.svg";
 
+const { Footer } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
 class PageFooter extends Component {
   render() {
     return (
-      <div className="footer-container">
+      <Footer className="footer-container">
         <Row>
           <Col xs={24} md={6}>
             <img
@@ -124,7 +125,7 @@ class PageFooter extends Component {
             <a href="/">Privacy Policy</a>
           </Col>
         </Row>
-      </div>
+      </Footer>
     );
   }
 }

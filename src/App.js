@@ -7,7 +7,7 @@ import PageFooter from "./PageFooter";
 import PageHeader from "./PageHeader";
 import Dashboard from "./Dashboard";
 
-const { Footer, Content } = Layout;
+const { Content } = Layout;
 
 class App extends Component {
   render() {
@@ -20,9 +20,7 @@ class App extends Component {
         </Content>
 
         <Layout>
-          <Footer id="page-footer">
-            <PageFooter />
-          </Footer>
+          <PageFooter />
         </Layout>
       </div>
     );

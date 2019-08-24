@@ -1,10 +1,9 @@
 .dashboard-container {
-    margin: 10px auto;
+    margin: 32px auto;
 }
 
-.dashboard-container > * {
+.dashboard-container > div:not(:last-child) {
     margin-bottom: 16px;
-    /* border: 1px solid black; */
 }
 
 .card {
