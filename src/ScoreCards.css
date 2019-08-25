@@ -2,16 +2,20 @@
     text-align: center;
 }
 .card.papers {
-    background-color: #1890ff;
+    /* background-color: #1890ff; */
+    background-image: linear-gradient(to bottom right, #EB4886, #B855A4);
 }
 .card.citations {
-    background-color: #faad14;
+    /* background-color: #faad14; */
+    background-image: linear-gradient(to bottom right, #875EC0, #5446BA);
 }
 .card.national {
-    background-color: #ff4d4f;
+    /* background-color: #ff4d4f; */
+    background-image: linear-gradient(to bottom right, #46C5F1, #6592DA);
 }
 .card.international {
-    background-color: #64b144;
+    /* background-color: #64b144; */
+    background-image: linear-gradient(to bottom right, #FFB92D, #F5805A);
 }
 .card .ant-typography {
     color: #ffffff;
