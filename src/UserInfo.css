@@ -1,7 +1,6 @@
-.user-info-container {
-    /* margin: 0 32px; */
-    /* padding: 24px; */
-}
+/* .user-info-container {
+    background-color: #fff;
+} */
 
 .general-info {
     /* border: 1px solid black; */
@@ -9,10 +8,10 @@
     margin-bottom: 8px;
 }
 
-.general-info > * {
-    /* border: 1px solid black; */
-    /* padding: 24px; */
-}
+/* .general-info > * {
+    border: 1px solid black; */
+    /* padding: 24px;
+} */
 
 #avatar {
     border-radius: 50%;

@@ -39,7 +39,11 @@ class UserInfo extends Component {
           <Col xs={20} className="user-info">
             <Elevation
               depth={1}
-              styles={{ borderRadius: "10px", padding: "24px" }}
+              styles={{
+                borderRadius: "10px",
+                padding: "24px",
+                backgroundColor: "#fff"
+              }}
             >
               <Row type="flex" justify="center" className="general-info">
                 <Col xs={24} lg={4}>
