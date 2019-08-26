@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { Row, Col } from "antd";
+import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import Elevation from "./Elevation";
 import am4themes_material from "@amcharts/amcharts4/themes/material";
 import "./AmBarChart.css";
-
 
 am4core.useTheme(am4themes_animated);
 am4core.useTheme(am4themes_material);
@@ -24,6 +22,15 @@ const data = [
 ];
 
 class AmBarChart extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { papers: null, citations: null };
+  }
+
+  handleHit(data) {
+    this.props.callback(data);
+  }
+
   componentDidMount() {
     let chart = am4core.create("chartdiv", am4charts.XYChart);
 
@@ -34,7 +41,8 @@ class AmBarChart extends Component {
     let yearAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     yearAxis.dataFields.category = "year";
     yearAxis.renderer.grid.template.disabled = true;
-    yearAxis.cursorTooltipEnabled = false;
+    yearAxis.renderer.grid.template.location = 0;
+    // yearAxis.cursorTooltipEnabled = false;
 
     let papersAxis = chart.yAxes.push(new am4charts.ValueAxis());
     papersAxis.renderer.minWidth = 50;
@@ -53,15 +61,13 @@ class AmBarChart extends Component {
     papersSeries.dataFields.valueY = "papers";
     papersSeries.dataFields.categoryX = "year";
     papersSeries.yAxis = papersAxis;
-    papersSeries.tooltipText = "papers: {valueY}";
+    papersSeries.tooltipText = "papers: [bold]{valueY}";
     papersSeries.tooltip.getFillFromObject = false;
     papersSeries.tooltip.background.fill = am4core.color("#EB4886");
     papersSeries.tooltip.label.fill = am4core.color("#000");
-    papersSeries.columns.template.strokeWidth = 0;
-    papersSeries.legendSettings.labelText = "papers"
     papersSeries.tooltip.pointerOrientation = "vertical";
-
-
+    papersSeries.columns.template.strokeWidth = 0;
+    papersSeries.legendSettings.labelText = "papers";
     papersSeries.columns.template.column.cornerRadiusTopLeft = 10;
     papersSeries.columns.template.column.cornerRadiusTopRight = 10;
     papersSeries.columns.template.column.fillOpacity = 0.8;
@@ -72,11 +78,21 @@ class AmBarChart extends Component {
     barGradient.rotation = 90;
     papersSeries.fill = barGradient;
 
+    papersSeries.sequencedInterpolation = true;
+    papersSeries.columns.template.events.on(
+      "hit",
+      e => {
+        const data = e.target.dataItem.dataContext;
+        this.handleHit(data);
+      },
+      this
+    );
+
     let citationsSeries = chart.series.push(new am4charts.LineSeries());
     citationsSeries.dataFields.valueY = "citations";
     citationsSeries.dataFields.categoryX = "year";
     citationsSeries.yAxis = citationsAxis;
-    citationsSeries.tooltipText = "citations: {valueY}";
+    citationsSeries.tooltipText = "citations: [bold]{valueY}";
     citationsSeries.tooltip.getFillFromObject = false;
     citationsSeries.tooltip.background.fill = am4core.color("#46C5F1");
     citationsSeries.tooltip.label.fill = am4core.color("#000");
@@ -100,7 +116,9 @@ class AmBarChart extends Component {
     circle.strokeWidth = 3;
 
     // on hover, make corner radiuses bigger
-    let hoverState = papersSeries.columns.template.column.states.create("hover");
+    let hoverState = papersSeries.columns.template.column.states.create(
+      "hover"
+    );
     hoverState.properties.cornerRadiusTopLeft = 0;
     hoverState.properties.cornerRadiusTopRight = 0;
     hoverState.properties.fillOpacity = 1;
@@ -111,7 +129,13 @@ class AmBarChart extends Component {
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
+    chart.cursor.behavior = "none";
     chart.cursor.lineY = false;
+    chart.cursor.fullWidthLineX = true;
+    chart.cursor.xAxis = yearAxis;
+    chart.cursor.lineX.strokeWidth = 0;
+    chart.cursor.lineX.fill = am4core.color("#000");
+    chart.cursor.lineX.fillOpacity = 0.1;
 
     this.chart = chart;
   }
@@ -123,25 +147,12 @@ class AmBarChart extends Component {
   }
 
   render() {
-    return (
-      <div className="chart-container">
-        <Row type="flex" justify="center">
-          <Col xs={20} className="chart-col">
-            <Elevation
-              depth={1}
-              styles={{
-                borderRadius: "10px",
-                padding: "24px",
-                backgroundColor: "#fff"
-              }}
-            >
-              <div id="chartdiv" style={{ width: "100%", height: "500px" }} />
-            </Elevation>
-          </Col>
-        </Row>
-      </div>
-    );
+    return <div id="chartdiv" style={{ width: "100%", height: "500px" }} />;
   }
 }
+
+AmBarChart.protoTypes = {
+  callback: PropTypes.func
+};
 
 export default AmBarChart;
