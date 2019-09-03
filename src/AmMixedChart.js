@@ -4,7 +4,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_material from "@amcharts/amcharts4/themes/material";
-import "./AmBarChart.css";
+import "./AmMixedChart.css";
 
 am4core.useTheme(am4themes_animated);
 am4core.useTheme(am4themes_material);
@@ -21,7 +21,7 @@ const data = [
   { year: "2019", papers: 16, citations: 386 }
 ];
 
-class AmBarChart extends Component {
+class AmMixedChart extends Component {
   constructor(props) {
     super(props);
     this.state = { papers: null, citations: null };
@@ -32,7 +32,7 @@ class AmBarChart extends Component {
   }
 
   componentDidMount() {
-    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    let chart = am4core.create("mixedchart", am4charts.XYChart);
 
     chart.colors.step = 4;
     chart.data = data;
@@ -126,6 +126,8 @@ class AmBarChart extends Component {
     // Legend
     chart.legend = new am4charts.Legend();
     chart.legend.useDefaultMarker = true;
+    // chart.legend.position = "right";
+    // chart.legend.width = 75;
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
@@ -147,12 +149,12 @@ class AmBarChart extends Component {
   }
 
   render() {
-    return <div id="chartdiv" style={{ width: "100%", height: "500px" }} />;
+    return <div id="mixedchart" style={this.props.styles} />;
   }
 }
 
-AmBarChart.protoTypes = {
+AmMixedChart.protoTypes = {
   callback: PropTypes.func
 };
 
-export default AmBarChart;
+export default AmMixedChart;
