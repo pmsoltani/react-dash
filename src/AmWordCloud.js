@@ -496,7 +496,7 @@ class AmWordCloud extends Component {
   }
 
   render() {
-    return <div id="chartdiv" style={{ width: "100%", height: "500px" }} />;
+    return <div id="chartdiv" style={this.props.styles} />;
   }
 }
 
