@@ -4,7 +4,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_material from "@amcharts/amcharts4/themes/material";
-// import "./AmNetwork.css";
+// import "./AmChordChart.css";
 
 am4core.useTheme(am4themes_animated);
 am4core.useTheme(am4themes_material);
@@ -50,7 +50,7 @@ const data = [
   { from: "F", to: "Am", value: 2 }
 ];
 
-class AmNetwork extends Component {
+class AmChordChart extends Component {
   constructor(props) {
     super(props);
     this.state = { papers: null, citations: null };
@@ -61,7 +61,7 @@ class AmNetwork extends Component {
   }
 
   componentDidMount() {
-    let chart = am4core.create("chartdiv", am4charts.ChordDiagram);
+    let chart = am4core.create("chordchart", am4charts.ChordDiagram);
 
     chart.colors.saturation = 0.45;
     chart.colors.step = 3;
@@ -169,12 +169,12 @@ class AmNetwork extends Component {
   }
 
   render() {
-    return <div id="chartdiv" style={{ width: "100%", height: "500px" }} />;
+    return <div id="chordchart" style={this.props.styles} />;
   }
 }
 
-AmNetwork.protoTypes = {
+AmChordChart.protoTypes = {
   callback: PropTypes.func
 };
 
-export default AmNetwork;
+export default AmChordChart;
