@@ -43,7 +43,7 @@ class Papers extends Component {
   render() {
     return (
       <div>
-        <Table dataSource={this.getData()} columns={columns} />;
+        <Table dataSource={this.getData()} columns={columns} />
       </div>
     );
   }

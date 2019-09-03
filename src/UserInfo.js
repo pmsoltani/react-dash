@@ -36,7 +36,7 @@ class UserInfo extends Component {
     return (
       <div className="user-info-container">
         <Row type="flex" justify="center">
-          <Col xs={20} className="user-info">
+          <Col xs={24} className="user-info">
             <Elevation
               depth={1}
               styles={{

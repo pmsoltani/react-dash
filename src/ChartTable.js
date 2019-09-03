@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col } from "antd";
 import Elevation from "./Elevation";
-import AmBarChart from "./AmBarChart";
+import AmMixedChart from "./AmMixedChart";
 import Papers from "./Papers";
 // import "./ChartTable.css";
 
@@ -25,7 +25,7 @@ class ChartTable extends Component {
     return (
       <div className="chart-table-container">
         <Row type="flex" justify="center">
-          <Col xs={20} className="chart-col">
+          <Col xs={24} className="chart-col">
             <Elevation
               depth={1}
               styles={{
@@ -34,7 +34,7 @@ class ChartTable extends Component {
                 backgroundColor: "#fff"
               }}
             >
-              <AmBarChart callback={this.chartData.bind(this)} />
+              {/* <AmMixedChart callback={this.chartData.bind(this)} /> */}
               <Papers data={this.state.data} />
               {/* <div id="charttable" style={{ border: "1px solid black" }}>
                 papers:<Text code></Text>

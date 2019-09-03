@@ -1,5 +1,5 @@
 .dashboard-container {
-    margin: 32px auto;
+    margin: 32px 64px;
 }
 
 .dashboard-container > div:not(:last-child) {
