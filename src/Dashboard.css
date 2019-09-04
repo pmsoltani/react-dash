@@ -5,9 +5,3 @@
 .dashboard-container > div:not(:last-child) {
     margin-bottom: 16px;
 }
-
-.card {
-    border: 0;
-    border-radius: 10px;
-    height: 140px;
-}
