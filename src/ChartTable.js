@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Card } from "antd";
 import Elevation from "./Elevation";
 import AmMixedChart from "./AmMixedChart";
 import Papers from "./Papers";
@@ -26,14 +26,15 @@ class ChartTable extends Component {
       <div className="chart-table-container">
         <Row type="flex" justify="center">
           <Col xs={24} className="chart-col">
-            <Elevation
+            <Card hoverable>
+              {/* <Elevation
               depth={1}
               styles={{
                 borderRadius: "10px",
                 padding: "24px",
                 backgroundColor: "#fff"
               }}
-            >
+            > */}
               {/* <AmMixedChart callback={this.chartData.bind(this)} /> */}
               <Papers data={this.state.data} />
               {/* <div id="charttable" style={{ border: "1px solid black" }}>
@@ -41,7 +42,8 @@ class ChartTable extends Component {
                 <br />
                 citations:<Text code></Text>
               </div> */}
-            </Elevation>
+              {/* </Elevation> */}
+            </Card>
           </Col>
         </Row>
       </div>
