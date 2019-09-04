@@ -1,21 +1,31 @@
 .card {
     text-align: center;
 }
-.card.papers > * {
+
+.card.papers {
     background-image: linear-gradient(to bottom right, #EB4886, #B855A4);
 }
-.card.citations > * {
+
+.card.citations {
     background-image: linear-gradient(to bottom right, #875EC0, #5446BA);
 }
-.card.national > * {
+
+.card.national {
     background-image: linear-gradient(to bottom right, #46C5F1, #6592DA);
 }
-.card.international > * {
+
+.card.international {
     background-image: linear-gradient(to bottom right, #FFB92D, #F5805A);
 }
+
 .card .ant-typography {
     color: #ffffff;
 }
+
 .card h2[class="ant-typography"] {
     font-size: 40px;
+}
+
+.ant-tabs .ant-tabs-left-bar .ant-tabs-tab {
+    padding-left: 0px;
 }

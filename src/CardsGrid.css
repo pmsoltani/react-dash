@@ -1,0 +1,16 @@
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: stretch;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.row-container > div.card {
+  flex: 1;
+}
