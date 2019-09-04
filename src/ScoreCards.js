@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Tabs, Typography } from "antd";
+import { Row, Col, Icon, Card, Tabs, Typography } from "antd";
 import Elevation from "./Elevation";
 import "./ScoreCards.css";
 import AmSparkBar from "./AmSparkBar";
@@ -10,7 +10,7 @@ import AmWordCloud from "./AmWordCloud";
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
-const styles = {
+const chartStyles = {
   width: "100%",
   height: "300px"
 }
@@ -18,61 +18,107 @@ const styles = {
 class ScoreCards extends Component {
   render() {
     return (
-      <div className="cards-container">
-        <Row type="flex" justify="center" className="cards-row">
-          <Col xs={24} lg={16}>
-            <Tabs defaultActiveKey="1" size="small" animated={{ tabPane: false }}>
-              <TabPane tab="Tab 1" key="1">
-                <AmMixedChart styles={styles} />
-              </TabPane>
-              <TabPane tab="Tab 2" key="2">
-                <AmChordChart styles={styles} />
-              </TabPane>
-              <TabPane tab="Tab 3" key="3">
-                <AmWordCloud styles={styles} />
-              </TabPane>
-            </Tabs>
-          </Col>
-          <Col
-            xs={24}
-            lg={2}
-            style={{ marginTop:"40px", borderRadius: 0, height: "200px" }}
-            className="card papers"
-          >
-            <Title level={2}>16</Title>
-            <Text>papers this year</Text>
-            <AmSparkBar />
-          </Col>
-          <Col
-            xs={24}
-            lg={2}
-            style={{ marginTop:"40px", borderRadius: 0, height: "200px" }}
-            className="card citations"
-          >
-            <Title level={2}>386</Title>
-            <Text>papers this year</Text>
-            <AmSparkLine />
-          </Col>
-          <Col
-            xs={24}
-            lg={2}
-            style={{ marginTop:"40px", borderRadius: 0, height: "200px" }}
-            className="card national"
-          >
-            <Title level={2}>5</Title>
-            <Text>national collaborators</Text>
-          </Col>
-          <Col
-            xs={24}
-            lg={2}
-            style={{ marginTop:"40px", borderRadius: 0, height: "200px" }}
-            className="card international"
-          >
-            <Title level={2}>3</Title>
-            <Text>international collaborators</Text>
-          </Col>
-        </Row>
-      </div>
+      <Row type="flex" justify="center" gutter={16} className="cards-row">
+        <Col xs={24} lg={16}>
+          <Elevation depth={1}>
+            <Card>
+              <Tabs
+                defaultActiveKey="1"
+                size="small"
+                animated={{ tabPane: false }}
+              >
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="pie-chart" />
+                      Summary
+                    </span>
+                  }
+                  key="1"
+                >
+                  <AmMixedChart styles={chartStyles} />
+                </TabPane>
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="team" />
+                      Collaborators
+                    </span>
+                  }
+                  key="2"
+                >
+                  <AmChordChart styles={chartStyles} />
+                </TabPane>
+                <TabPane
+                  tab={
+                    <span>
+                      <Icon type="tags" />
+                      Keywords
+                    </span>
+                  }
+                  key="3"
+                >
+                  <AmWordCloud styles={chartStyles} />
+                </TabPane>
+              </Tabs>
+            </Card>
+          </Elevation>
+        </Col>
+
+        <Col xs={24} lg={8}>
+          <Row type="flex">
+            <Col
+              xs={24}
+              lg={12}
+              style={{ borderRadius: 0, height: "100%" }}
+              className="card papers"
+            >
+              <Card hoverable>
+                <Title level={2}>16</Title>
+                <Text>papers this year</Text>
+                <AmSparkBar />
+              </Card>
+            </Col>
+            <Col
+              xs={24}
+              lg={12}
+              style={{ borderRadius: 0, height: "100%" }}
+              className="card citations"
+            >
+              <Card hoverable>
+                <Title level={2}>386</Title>
+                <Text>papers this year</Text>
+                <AmSparkLine />
+              </Card>
+            </Col>
+          </Row>
+
+          <Row type="flex">
+            <Col
+              xs={24}
+              lg={12}
+              style={{ borderRadius: 0, height: "100%" }}
+              className="card national"
+            >
+              <Card hoverable>
+                <Title level={2}>5</Title>
+                <Text>national collaborators</Text>
+              </Card>
+            </Col>
+            <Col
+              xs={24}
+              lg={12}
+              style={{ borderRadius: 0, height: "100%" }}
+              className="card international"
+            >
+              <Card hoverable>
+                <Title level={2}>3</Title>
+                <Text>international collaborators</Text>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     );
   }
 }
