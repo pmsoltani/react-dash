@@ -7,8 +7,8 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_material from "@amcharts/amcharts4/themes/material";
 // import "./AmWordCloud.css";
 
-am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_material);
+// am4core.useTheme(am4themes_animated);
+// am4core.useTheme(am4themes_material);
 
 const data = [
   {
@@ -470,6 +470,7 @@ class AmWordCloud extends Component {
     series.angles = [0, 0, 0, 90];
 
     series.colors = new am4core.ColorSet();
+    series.colors.step = 4;
     series.colors.passOptions = {};
     series.labels.template.tooltipText = "{word}:\n[bold]{value}[/]";
 

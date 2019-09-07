@@ -3,15 +3,10 @@ import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import am4themes_material from "@amcharts/amcharts4/themes/material";
-// import "./AmPieChart.css";
-
-import am4themes_myTheme from "./assets/am4themes_myTheme";
-
+// import am4themes_material from "@amcharts/amcharts4/themes/material";
 
 am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_material);
-am4core.useTheme(am4themes_myTheme);
+// am4core.useTheme(am4themes_material);
 
 const data = [
   {
@@ -54,8 +49,8 @@ class AmPieChart extends Component {
     pieSeries.dataFields.category = "country";
 
     // Visual configs
-    chart.colors.step = 4;
     chart.innerRadius = am4core.percent(40);
+    pieSeries.colors.step = 4;
     pieSeries.slices.template.cornerRadius = 4;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.slices.template.propertyFields.isActive = "pulled";

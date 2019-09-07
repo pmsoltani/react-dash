@@ -3,11 +3,10 @@ import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import am4themes_material from "@amcharts/amcharts4/themes/material";
-// import "./AmMixedChart.css";
+// import am4themes_material from "@amcharts/amcharts4/themes/material";
 
 am4core.useTheme(am4themes_animated);
-am4core.useTheme(am4themes_material);
+// am4core.useTheme(am4themes_material);
 
 const data = [
   { year: "2011", papers: 190, citations: 99 },
@@ -37,15 +36,23 @@ class AmMixedChart extends Component {
     chart.paddingLeft = 0
     chart.paddingRight = 0
 
-    chart.colors.step = 4;
     chart.data = data;
 
+    // Create Colors
+    let colorSet = new am4core.ColorSet();
+    colorSet.step = 2;
+    let barColor1 = colorSet.next();
+    let barColor2 = colorSet.next();
+    // colorSet.next();
+    // colorSet.next();
+    let lineColor1 = colorSet.next();
+    let lineColor2 = colorSet.next();
+    console.log(barColor1,barColor2,lineColor1,lineColor2);
     // Create axes
     let yearAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     yearAxis.dataFields.category = "year";
     yearAxis.renderer.grid.template.disabled = true;
     yearAxis.renderer.grid.template.location = 0;
-    // yearAxis.cursorTooltipEnabled = false;
 
     let papersAxis = chart.yAxes.push(new am4charts.ValueAxis());
     papersAxis.renderer.minWidth = 50;
@@ -66,7 +73,7 @@ class AmMixedChart extends Component {
     papersSeries.yAxis = papersAxis;
     papersSeries.tooltipText = "papers: [bold]{valueY}";
     papersSeries.tooltip.getFillFromObject = false;
-    papersSeries.tooltip.background.fill = am4core.color("#EB4886");
+    papersSeries.tooltip.background.fill = am4core.color(barColor2);
     papersSeries.tooltip.label.fill = am4core.color("#000");
     papersSeries.tooltip.pointerOrientation = "vertical";
     papersSeries.columns.template.strokeWidth = 0;
@@ -76,8 +83,8 @@ class AmMixedChart extends Component {
     papersSeries.columns.template.column.fillOpacity = 0.8;
 
     let barGradient = new am4core.LinearGradient();
-    barGradient.addColor(am4core.color("#B855A4"));
-    barGradient.addColor(am4core.color("#EB4886"));
+    barGradient.addColor(barColor2);
+    barGradient.addColor(barColor1);
     barGradient.rotation = 90;
     papersSeries.fill = barGradient;
 
@@ -97,16 +104,16 @@ class AmMixedChart extends Component {
     citationsSeries.yAxis = citationsAxis;
     citationsSeries.tooltipText = "citations: [bold]{valueY}";
     citationsSeries.tooltip.getFillFromObject = false;
-    citationsSeries.tooltip.background.fill = am4core.color("#46C5F1");
+    citationsSeries.tooltip.background.fill = am4core.color(lineColor1);
     citationsSeries.tooltip.label.fill = am4core.color("#000");
     citationsSeries.legendSettings.labelText = "citations";
+    citationsSeries.stroke = lineColor2;
     citationsSeries.strokeWidth = 3;
     citationsSeries.tensionX = 0.8;
 
     let lineGradient = new am4core.LinearGradient();
-    lineGradient.addColor(am4core.color("#6592DA"), 1);
-    lineGradient.addColor(am4core.color("#46C5F1"), 0);
-    // lineGradient.addColor(am4core.color("#46C5F1"), 0);
+    lineGradient.addColor(lineColor2, 1);
+    lineGradient.addColor(lineColor1, 0.1);
     lineGradient.rotation = 90;
     citationsSeries.fillOpacity = 0.8;
     citationsSeries.fill = lineGradient;
@@ -115,7 +122,7 @@ class AmMixedChart extends Component {
     let circle = bullet.createChild(am4core.Circle);
     circle.width = 15;
     circle.height = 15;
-    circle.fill = am4core.color("#6592DA");
+    circle.fill = am4core.color("#fff");
     circle.strokeWidth = 3;
 
     // on hover, make corner radiuses bigger
@@ -129,8 +136,6 @@ class AmMixedChart extends Component {
     // Legend
     chart.legend = new am4charts.Legend();
     chart.legend.useDefaultMarker = true;
-    // chart.legend.position = "right";
-    // chart.legend.width = 75;
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
