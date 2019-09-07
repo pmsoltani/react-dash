@@ -458,6 +458,9 @@ class AmWordCloud extends Component {
   componentDidMount() {
     let chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
 
+    chart.paddingLeft = 0;
+    chart.paddingRight = 0;
+
     let series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
 
     series.data = data
@@ -496,7 +499,7 @@ class AmWordCloud extends Component {
   }
 
   render() {
-    return <div id="chartdiv" style={this.props.styles} />;
+    return <div id="chartdiv" style={this.props.style} />;
   }
 }
 

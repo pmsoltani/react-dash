@@ -11,52 +11,40 @@ const data = [
   { year: "2016", papers: 16, citations: 27 },
   { year: "2017", papers: 16, citations: 66 },
   { year: "2018", papers: 16, citations: 315 },
-  { year: "2019", papers: 16, citations: 386 }
+  { year: "2019", papers: 16, citations: 380 }
 ];
 
 class AmSparkLine extends Component {
   componentDidMount() {
     let chart = am4core.create("sparklinediv", am4charts.XYChart);
 
+    chart.padding(0, 0, 0, 0);
+
     chart.data = data;
 
     // Create axes
-    let yearAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    yearAxis.dataFields.category = "year";
-    yearAxis.renderer.grid.template.disabled = true;
-    yearAxis.renderer.grid.template.location = 0;
-    yearAxis.cursorTooltipEnabled = false;
-    yearAxis.renderer.disabled = true;
-    yearAxis.renderer.line.strokeOpacity = 0;
+    let hAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    hAxis.dataFields.category = "year";
+    hAxis.renderer.grid.template.disabled = true;
+    hAxis.renderer.labels.template.disabled = true;
+    hAxis.cursorTooltipEnabled = false;
 
-    let citationsAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    citationsAxis.renderer.opposite = true;
-    citationsAxis.renderer.grid.template.disabled = true;
-    citationsAxis.renderer.minWidth = 50;
-    citationsAxis.min = 0;
-    citationsAxis.cursorTooltipEnabled = false;
-    citationsAxis.renderer.disabled = true;
+    let vAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    vAxis.renderer.grid.template.disabled = true;
+    vAxis.renderer.baseGrid.disabled = true;
+    vAxis.renderer.labels.template.disabled = true;
+    vAxis.cursorTooltipEnabled = false;
 
-    let citationsSeries = chart.series.push(new am4charts.LineSeries());
-    citationsSeries.dataFields.valueY = "citations";
-    citationsSeries.dataFields.categoryX = "year";
-    citationsSeries.yAxis = citationsAxis;
-    citationsSeries.tooltipText = "{categoryX}: [bold]{valueY}";
-    // citationsSeries.tooltip.getFillFromObject = false;
-    // citationsSeries.tooltip.background.fill = am4core.color("#46C5F1");
-    // citationsSeries.tooltip.label.fill = am4core.color("#000");
-    citationsSeries.legendSettings.labelText = "citations";
-    citationsSeries.strokeWidth = 3;
-    citationsSeries.stroke = am4core.color("#000");
-    citationsSeries.tensionX = 0.8;
+    let series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "citations";
+    series.dataFields.categoryX = "year";
+    series.tooltipText = "{categoryX}:\n[bold]{valueY}";
+    series.tensionX = 0.8;
 
-    citationsSeries.fill = am4core.color("#000");
-
-    let bullet = citationsSeries.bullets.push(new am4charts.Bullet());
+    let bullet = series.bullets.push(new am4charts.Bullet());
     let circle = bullet.createChild(am4core.Circle);
     circle.width = 5;
     circle.height = 5;
-    circle.stroke = am4core.color("#000");
     circle.strokeWidth = 3;
 
     // Cursor
@@ -64,7 +52,7 @@ class AmSparkLine extends Component {
     chart.cursor.behavior = "none";
     chart.cursor.lineY = false;
     chart.cursor.fullWidthLineX = true;
-    chart.cursor.xAxis = yearAxis;
+    chart.cursor.xAxis = hAxis;
     chart.cursor.lineX.strokeWidth = 0;
     chart.cursor.lineX.fill = am4core.color("#000");
     chart.cursor.lineX.fillOpacity = 0.1;
@@ -79,7 +67,7 @@ class AmSparkLine extends Component {
   }
 
   render() {
-    return <div id="sparklinediv" style={{ height: "100px", width: "100px" }} />;
+    return <div id="sparklinediv" style={this.props.style} />;
   }
 }
 

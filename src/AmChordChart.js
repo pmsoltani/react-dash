@@ -63,6 +63,9 @@ class AmChordChart extends Component {
   componentDidMount() {
     let chart = am4core.create("chordchart", am4charts.ChordDiagram);
 
+    chart.paddingLeft = 0;
+    chart.paddingRight = 0;
+
     chart.colors.saturation = 0.45;
     chart.colors.step = 3;
 
@@ -169,7 +172,7 @@ class AmChordChart extends Component {
   }
 
   render() {
-    return <div id="chordchart" style={this.props.styles} />;
+    return <div id="chordchart" style={this.props.style} />;
   }
 }
 

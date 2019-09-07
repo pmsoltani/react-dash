@@ -4,7 +4,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4themes_material from "@amcharts/amcharts4/themes/material";
-import "./AmMixedChart.css";
+// import "./AmMixedChart.css";
 
 am4core.useTheme(am4themes_animated);
 am4core.useTheme(am4themes_material);
@@ -18,7 +18,7 @@ const data = [
   { year: "2016", papers: 16, citations: 27 },
   { year: "2017", papers: 16, citations: 66 },
   { year: "2018", papers: 16, citations: 315 },
-  { year: "2019", papers: 16, citations: 386 }
+  { year: "2019", papers: 16, citations: 380 }
 ];
 
 class AmMixedChart extends Component {
@@ -33,6 +33,9 @@ class AmMixedChart extends Component {
 
   componentDidMount() {
     let chart = am4core.create("mixedchart", am4charts.XYChart);
+
+    chart.paddingLeft = 0
+    chart.paddingRight = 0
 
     chart.colors.step = 4;
     chart.data = data;
@@ -149,7 +152,7 @@ class AmMixedChart extends Component {
   }
 
   render() {
-    return <div id="mixedchart" style={this.props.styles} />;
+    return <div id="mixedchart" style={this.props.style} />;
   }
 }
 

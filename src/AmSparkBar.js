@@ -18,57 +18,35 @@ class AmSparkBar extends Component {
   componentDidMount() {
     let chart = am4core.create("sparkbardiv", am4charts.XYChart);
 
-    // chart.colors.step = 4;
+    chart.padding(0, 0, 0, 0);
+
     chart.data = data;
 
     // Create axes
-    let yearAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    yearAxis.dataFields.category = "year";
-    yearAxis.renderer.grid.template.disabled = true;
-    yearAxis.renderer.grid.template.location = 0;
-    yearAxis.cursorTooltipEnabled = false;
-    yearAxis.renderer.disabled = true;
+    let hAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+    hAxis.dataFields.category = "year";
+    hAxis.renderer.grid.template.disabled = true;
+    hAxis.renderer.labels.template.disabled = true;
+    hAxis.cursorTooltipEnabled = false;
 
-    let papersAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    papersAxis.renderer.minWidth = 50;
-    papersAxis.min = 0;
-    papersAxis.cursorTooltipEnabled = false;
-    papersAxis.renderer.grid.template.disabled = true;
-    papersAxis.renderer.disabled = true;
+    let vAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    vAxis.renderer.grid.template.disabled = true;
+    vAxis.renderer.baseGrid.disabled = true;
+    vAxis.renderer.labels.template.disabled = true;
+    vAxis.cursorTooltipEnabled = false;
 
     // Create series
-    let papersSeries = chart.series.push(new am4charts.ColumnSeries());
-    papersSeries.dataFields.valueY = "papers";
-    papersSeries.dataFields.categoryX = "year";
-    papersSeries.yAxis = papersAxis;
-    papersSeries.tooltipText = "{categoryX}: [bold]{valueY}";
-    papersSeries.columns.template.strokeWidth = 0;
-    papersSeries.fill = am4core.color("#000")
-
-    papersSeries.sequencedInterpolation = true;
-    papersSeries.columns.template.events.on(
-      "hit",
-      e => {
-        const data = e.target.dataItem.dataContext;
-        this.handleHit(data);
-      },
-      this
-    );
-
-    // on hover, make corner radiuses bigger
-    let hoverState = papersSeries.columns.template.column.states.create(
-      "hover"
-    );
-    hoverState.properties.cornerRadiusTopLeft = 0;
-    hoverState.properties.cornerRadiusTopRight = 0;
-    hoverState.properties.fillOpacity = 1;
+    let series = chart.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueY = "papers";
+    series.dataFields.categoryX = "year";
+    series.tooltipText = "{categoryX}:\n[bold]{valueY}";
 
     // Cursor
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.behavior = "none";
     chart.cursor.lineY = false;
     chart.cursor.fullWidthLineX = true;
-    chart.cursor.xAxis = yearAxis;
+    chart.cursor.xAxis = hAxis;
     chart.cursor.lineX.strokeWidth = 0;
     chart.cursor.lineX.fill = am4core.color("#000");
     chart.cursor.lineX.fillOpacity = 0.1;
@@ -83,7 +61,7 @@ class AmSparkBar extends Component {
   }
 
   render() {
-    return <div id="sparkbardiv" style={{ height: "100px", width: "100px" }} />;
+    return <div id="sparkbardiv" style={this.props.style} />;
   }
 }
 
