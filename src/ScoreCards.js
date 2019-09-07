@@ -42,7 +42,7 @@ class ScoreCards extends Component {
           <Col xs={8}>
             <Card hoverable>
               <Tabs
-                defaultActiveKey="4"
+                defaultActiveKey="1"
                 size="small"
                 animated={{ tabPane: false }}
                 tabPosition="left"
@@ -111,7 +111,7 @@ class ScoreCards extends Component {
                 </Card>
               </Col>
             </Row>
-            <Row>
+            <Row className="cards-grid-row">
               <Col>
                 <Card
                   hoverable
@@ -130,7 +130,7 @@ class ScoreCards extends Component {
                 </Card>
               </Col>
             </Row>
-            <Row>
+            <Row className="cards-grid-row">
               <Col>
                 <Card
                   hoverable
@@ -165,7 +165,6 @@ class ScoreCards extends Component {
                 </Card>
               </Col>
             </Row> */}
-
           </Col>
         </Row>
       </Container>

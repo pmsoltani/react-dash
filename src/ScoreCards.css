@@ -50,3 +50,7 @@
 .score-card > div {
   padding: 12px;
 }
+
+.cards-grid-row {
+  margin-bottom: 8px;
+}
