@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Typography, List, Avatar } from "antd";
-import Elevation from "./Elevation";
+import { Typography, List, Avatar } from "antd";
 import "./UserInfo.css";
+import { Container, Row, Col } from "react-grid-system";
 
 // import profile from "./assets/profile.svg";
 import linkedinLogo from "./assets/linkedin.svg";
 import emailLogo from "./assets/email.svg";
-import phoneLogo from "./assets/phone.svg";
+// import phoneLogo from "./assets/phone.svg";
 import googleLogo from "./assets/google.svg";
 import websiteLogo from "./assets/website.svg";
 import pooria from "./assets/pooria.jpg"
@@ -34,57 +34,51 @@ const contactInfo = [
 class UserInfo extends Component {
   render() {
     return (
-      <div className="user-info-container">
-        <Row type="flex" justify="center">
-          <Col xs={24} className="user-info">
-            <Row type="flex" justify="center" className="general-info">
-              <Col xs={24} lg={4}>
-                <Avatar
-                  size={120}
-                  icon="user"
-                  src={pooria}
-                  style={{ border: "3px solid #8739e5" }}
-                  // shape="square"
-                />
-              </Col>
-              <Col xs={24} lg={8}>
-                <Title level={2}>Pooria Soltani</Title>
-                Associate Professor
-                <br />
-                <Text>
-                  <a href="/">Department of Chemical Engineering</a>
-                </Text>
-                <br />
-                <Text>
-                  <a href="/">Sharif University of Technology</a>
-                </Text>
-              </Col>
-              <Col xs={24} lg={4} />
-              <Col xs={24} lg={8} style={{ flexGrow: 2, textAlign: "right" }}>
-                <List
-                  dataSource={contactInfo}
-                  renderItem={item => (
-                    <List.Item
-                      style={{
-                        borderBottom: 0,
-                        padding: 0,
-                        paddingBottom: "6px"
-                      }}
-                    >
-                      <a href={item.address}>
-                        <List.Item.Meta
-                          avatar={<Avatar src={item.icon} />}
-                          title={item.text}
-                        />
-                      </a>
-                    </List.Item>
-                  )}
-                />
-              </Col>
-            </Row>
+      <Container fluid className="user-info-container">
+        <Row style={{ justifyContent: "space-between" }}>
+          <Col xs="content" style={{ padding: 0 }}>
+            <Avatar
+              size={120}
+              icon="user"
+              src={pooria}
+              style={{ border: "3px solid #8739e5" }}
+            />
+          </Col>
+          <Col>
+            <Title level={2}>Pooria Soltani</Title>
+            Associate Professor
+            <br />
+            <Text>
+              <a href="/">Department of Chemical Engineering</a>
+            </Text>
+            <br />
+            <Text>
+              <a href="/">Sharif University of Technology</a>
+            </Text>
+          </Col>
+          <Col xs={24} md="content">
+            <List
+              dataSource={contactInfo}
+              renderItem={item => (
+                <List.Item
+                  style={{
+                    borderBottom: 0,
+                    padding: 0,
+                    paddingBottom: "6px"
+                  }}
+                >
+                  <a href={item.address}>
+                    <List.Item.Meta
+                      avatar={<Avatar src={item.icon} />}
+                      title={item.text}
+                    />
+                  </a>
+                </List.Item>
+              )}
+            />
           </Col>
         </Row>
-      </div>
+      </Container>
     );
   }
 }
