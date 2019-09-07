@@ -5,6 +5,7 @@ import ScoreCards from "./ScoreCards";
 // import ChartTable from "./ChartTable";
 import "./Dashboard.css";
 import Papers from "./Papers";
+import avatar from "./assets/pooria.jpg"
 
 const info = {
   first: "Pooria",
@@ -12,6 +13,7 @@ const info = {
   rank: "Associate Professor",
   department: "Department of Chemical Engineering",
   institution: "Sharif University of Technology",
+  avatar: avatar,
   contact: [
     { type: "email", address: "/", text: "pooria.ms@gmail.com" },
     { type: "website", address: "/", text: "sharif.edu/~pmsoltani" },
@@ -30,6 +32,7 @@ class Dashboard extends Component {
           first={info.first}
           last={info.last}
           rank={info.rank}
+          avatar={info.avatar}
           department={info.department}
           institution={info.institution}
           contactInfo={info.contact}

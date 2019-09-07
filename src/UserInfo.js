@@ -9,7 +9,6 @@ import emailLogo from "./assets/email.svg";
 import phoneLogo from "./assets/phone.svg";
 import googleLogo from "./assets/google.svg";
 import websiteLogo from "./assets/website.svg";
-import pooria from "./assets/pooria.jpg"
 
 const { Title, Text } = Typography;
 
@@ -59,7 +58,7 @@ class UserInfo extends Component {
             <Avatar
               size={120}
               icon="user"
-              src={pooria}
+              src={this.props.avatar}
               style={{ border: "3px solid #8739e5" }}
             />
           </Col>
