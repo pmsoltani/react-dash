@@ -35,13 +35,10 @@
 }
 
 .search-container .ant-input {
-  color: var(--headerColor);
   background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.2);
 }
-.search-container i {
-  color: var(--headerColor);
-  border-color: rgba(255, 255, 255, 0.2);
+.search-container .ant-input:focus {
+  background-color: #ffffff;
 }
 
 .profile-container {

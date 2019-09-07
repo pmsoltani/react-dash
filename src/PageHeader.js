@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Input, Layout, Menu, Row, Col, Icon } from "antd";
 import Logo from "./Logo"
-import smallLogo from "./assets/wieldySmallLogo.png";
 import profile from "./assets/profile.svg"
 
 import "./PageHeader.css";
@@ -27,19 +26,13 @@ class PageHeader extends Component {
         </div>
         <Header>
           <Row type="flex">
-            <Col xs={0} className="side-menu-icon">
-              <Icon type="menu" />
+            <Col xs={24} sm={10} md={8} lg={5} className="logo-container">
+              <Logo
+                style={{ fontWeight: 700, fontSize: "48px", color: "#fff" }}
+              />
             </Col>
 
-            <Col xs={0} className="small-logo-container">
-              <img src={smallLogo} alt="logo" width="35px" height="18px" />
-            </Col>
-
-            <Col xs={3} className="logo-container">
-              <Logo width="98px" height="18px" />
-            </Col>
-
-            <Col xs={14} className="menu-container">
+            <Col xs={0} className="menu-container">
               <Menu mode="horizontal" className="menu" theme="light">
                 <Menu.Item key="1" className="menu-item">
                   <Icon type="home" />
@@ -68,11 +61,11 @@ class PageHeader extends Component {
               </Menu>
             </Col>
 
-            <Col xs={0} className="search-container">
+            <Col xs={0} sm={14} md={16} lg={19}  className="search-container">
               <Search
                 placeholder="input search text"
                 onSearch={value => console.log(value)}
-                style={{ width: 200 }}
+                style={{ width: 300 }}
               />
             </Col>
 
