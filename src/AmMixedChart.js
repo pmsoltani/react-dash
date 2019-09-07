@@ -43,11 +43,9 @@ class AmMixedChart extends Component {
     colorSet.step = 2;
     let barColor1 = colorSet.next();
     let barColor2 = colorSet.next();
-    // colorSet.next();
-    // colorSet.next();
     let lineColor1 = colorSet.next();
     let lineColor2 = colorSet.next();
-    console.log(barColor1,barColor2,lineColor1,lineColor2);
+
     // Create axes
     let yearAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     yearAxis.dataFields.category = "year";
