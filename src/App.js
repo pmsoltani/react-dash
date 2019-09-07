@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Layout } from "antd";
 import "./App.css";
+import { ScreenClassProvider } from "react-grid-system";
 
 import PageFooter from "./PageFooter";
 // import Navbar from "./Navbar";
@@ -12,7 +13,7 @@ const { Content } = Layout;
 class App extends Component {
   render() {
     return (
-      <div id="page-container">
+      <ScreenClassProvider id="page-container">
         <PageHeader />
 
         <Content id="page-content">
@@ -22,7 +23,7 @@ class App extends Component {
         <Layout>
           <PageFooter />
         </Layout>
-      </div>
+      </ScreenClassProvider>
     );
   }
 }
