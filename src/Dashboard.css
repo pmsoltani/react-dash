@@ -1,7 +1,14 @@
 .dashboard-container {
-    margin: 32px 64px;
+  margin: 32px 64px;
 }
 
 .dashboard-container > div:not(:last-child) {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.dashboard-tabs
+  > .ant-tabs-content
+  > .ant-tabs-tabpane-active
+  > div:not(:last-child) {
+  margin-bottom: 16px;
 }

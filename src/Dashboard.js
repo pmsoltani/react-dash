@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Divider } from "antd";
+import { Tabs, Icon } from "antd";
 import UserInfo from "./UserInfo";
 import ScoreCards from "./ScoreCards";
 // import ChartTable from "./ChartTable";
 import "./Dashboard.css";
 import Papers from "./Papers";
 import avatar from "./assets/pooria.jpg"
+
+const { TabPane } = Tabs;
 
 const info = {
   first: "Pooria",
@@ -37,9 +39,37 @@ class Dashboard extends Component {
           institution={info.institution}
           contactInfo={info.contact}
         />
-        <Divider style={{ height: "2px" }} />
-        <ScoreCards />
-        <Papers />
+        <Tabs
+          defaultActiveKey="1"
+          size="small"
+          animated={{ tabPane: false }}
+          tabPosition="top"
+          className="dashboard-tabs"
+        >
+          <TabPane
+            tab={
+              <span>
+                <Icon type="dashboard" />
+                Dashboard
+              </span>
+            }
+            key="1"
+          >
+            <ScoreCards />
+            <Papers />
+          </TabPane>
+          <TabPane
+            tab={
+              <span>
+                <Icon type="book" />
+                Publications
+              </span>
+            }
+            key="2"
+          >
+            <Papers />
+          </TabPane>
+        </Tabs>
       </div>
     );
   }
