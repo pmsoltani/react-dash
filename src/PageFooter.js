@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Row, Col, Layout, Typography, Divider } from "antd";
 import "./PageFooter.css";
 
-import elsametricLogo from "./assets/logo.svg";
+// import elsametricLogo from "./assets/logo.svg";
 import googleMapsLogo from "./assets/google-maps.svg";
 import instagramLogo from "./assets/instagram.svg";
 import linkedinLogo from "./assets/linkedin.svg";
 import telegramLogo from "./assets/telegram.svg";
+import Logo from "./Logo";
 
 const { Footer } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -16,21 +17,23 @@ class PageFooter extends Component {
     return (
       <Footer className="footer-container">
         <Row>
-          <Col xs={24} md={6}>
-            <img
-              src={elsametricLogo}
-              alt="elsametric logo"
-              height="150px"
+          <Col xs={24} lg={6}>
+            <Logo
+              style={{
+                fontWeight: 700,
+                fontSize: "72px",
+                color: "#fff",
+                position: "relative",
+                bottom: "40px"
+              }}
             />
-            <Title level={2}>elsametric</Title>
           </Col>
 
-          <Col xs={24} md={18}>
+          <Col xs={24} lg={18}>
             <Row>
               <Paragraph>
-                <Text code>elsametric</Text> can help you analyze the
-                academic performance of researchers, departments, and
-                universities.
+                <Text code>elsametric</Text> can help you analyze the academic
+                performance of researchers, departments, and universities.
               </Paragraph>
             </Row>
 
@@ -45,9 +48,7 @@ class PageFooter extends Component {
                       <a href="/">Sharif Homepage</a>
                     </li>
                     <li>
-                      <a href="/">
-                        Sharif International Affairs Office
-                      </a>
+                      <a href="/">Sharif International Affairs Office</a>
                     </li>
                     <li>
                       <a href="/">About Us</a>
@@ -63,9 +64,7 @@ class PageFooter extends Component {
                 <Paragraph>
                   <Text type="primary">International Affairs Office</Text>
                   <br />
-                  <Text type="primary">
-                    Sharif University of Technology
-                  </Text>
+                  <Text type="primary">Sharif University of Technology</Text>
                   <br />
                   <Text type="primary">Azadi Ave.</Text>
                   <br />
@@ -73,9 +72,7 @@ class PageFooter extends Component {
                   <br />
                   <Text type="primary">
                     <Text strong>Email: </Text>
-                    <a href="/">
-                      pooria.ms@gmail.com
-                    </a>
+                    <a href="/">pooria.ms@gmail.com</a>
                   </Text>
                 </Paragraph>
                 <Paragraph>
