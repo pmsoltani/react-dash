@@ -1,31 +1,52 @@
-.card {
-    text-align: center;
+@import "./assets/palette.css";
+
+.score-card {
+  text-align: right;
+  /* height: 100%; */
+}
+.score-card.papers {
+  background-image: linear-gradient(to bottom right, #EB4886, #B855A4);
+}
+.score-card.citations {
+  background-image: linear-gradient(to bottom right, #875EC0, #5446BA);
+}
+.score-card.national {
+  background-image: linear-gradient(to bottom right, #46C5F1, #6592DA);
+}
+.score-card.international {
+  background-image: linear-gradient(to bottom right, #FFB92D, #F5805A);
+}
+.score-card .ant-typography {
+  color: #ffffff;
+}
+.score-card h2[class="ant-typography"] {
+  font-size: 36px;
+  margin-bottom: 0;
+}
+.score-card span[class="ant-typography"] {
+  font-size: 12px;
+  margin-bottom: 0;
 }
 
-.card.papers {
-    background-image: linear-gradient(to bottom right, #EB4886, #B855A4);
+.ant-card-hoverable {
+  cursor: default;
 }
-
-.card.citations {
-    background-image: linear-gradient(to bottom right, #875EC0, #5446BA);
-}
-
-.card.national {
-    background-image: linear-gradient(to bottom right, #46C5F1, #6592DA);
-}
-
-.card.international {
-    background-image: linear-gradient(to bottom right, #FFB92D, #F5805A);
-}
-
-.card .ant-typography {
-    color: #ffffff;
-}
-
-.card h2[class="ant-typography"] {
-    font-size: 40px;
+.ant-card-hoverable.score-card:hover {
+  /* border-color: rgba(0, 0, 0, 0.9); */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .ant-tabs .ant-tabs-left-bar .ant-tabs-tab {
     padding-left: 0px;
+}
+.ant-tabs .ant-tabs-left-content {
+    padding-left: 0px;
+}
+
+.container {
+    padding: 0 !important;
+}
+
+.score-card > div {
+  padding: 12px;
 }
