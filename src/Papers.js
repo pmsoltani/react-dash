@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table } from "antd";
+import { Table, Card } from "antd";
 // import "./Papers.css";
 
 const columns = [
@@ -42,9 +42,9 @@ class Papers extends Component {
 
   render() {
     return (
-      <div>
+      <Card hoverable>
         <Table dataSource={this.getData()} columns={columns} />
-      </div>
+      </Card>
     );
   }
 }
