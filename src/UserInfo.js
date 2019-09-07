@@ -25,9 +25,10 @@ class UserInfo extends Component {
     super(props);
     this.state = {
       showContactModal: false,
-      contactInfo: this.props.contactInfo.map(
-        item => ({...item, icon: contactIcons[item.type]})
-      )
+      contactInfo: this.props.contactInfo.map(item => ({
+        ...item,
+        icon: contactIcons[item.type]
+      }))
     };
   }
 
@@ -45,56 +46,65 @@ class UserInfo extends Component {
 
   popMessage = (
     <div>
-      <Icon type="tool" />
-      <span style={{ marginLeft: "8px" }}>Under Construction!</span>
+      <Text type="warning">
+        <Icon type="tool" />
+        <span style={{ marginLeft: "8px" }}>Under Construction!</span>
+      </Text>
     </div>
   );
 
   render() {
     return (
       <Container fluid className="user-info-container">
-        <Row style={{ justifyContent: "space-between" }}>
-          <Col xs="content" style={{ padding: 0 }}>
-            <Avatar
-              size={120}
-              icon="user"
-              src={this.props.avatar}
-              style={{ border: "3px solid #8739e5" }}
-            />
-          </Col>
+        <Row
+          style={{
+            justifyContent: "space-between"
+          }}
+        >
           <Col>
-            <Title level={2}>
-              <span className="first-name">{this.props.first}</span>
-              <span> </span>
-              <span
-                className="last-name"
-                style={{ textTransform: "uppercase" }}
-              >
-                {this.props.last}
-              </span>
-            </Title>
-            {this.props.rank}
-            <br />
-            <Text>
-              <a href="/">{this.props.department}</a>
-            </Text>
-            <br />
-            <Text>
-              <a href="/">{this.props.institution}</a>
-            </Text>
+            <Row>
+              <Col xs="content" style={{ paddingLeft: 0 }}>
+                <Avatar
+                  size={120}
+                  icon="user"
+                  src={this.props.avatar}
+                  style={{
+                    border: "3px solid #fff",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, .4)"
+                  }}
+                  id="profile-picture"
+                />
+              </Col>
+              <Col xs={12} md={6}>
+                <Title level={2}>
+                  <span className="first-name">{this.props.first}</span>
+                  <span> </span>
+                  <span
+                    className="last-name"
+                    style={{ textTransform: "uppercase" }}
+                  >
+                    {this.props.last}
+                  </span>
+                </Title>
+                {this.props.rank}
+                <br />
+                <Text>
+                  <a href="/">{this.props.department}</a>
+                </Text>
+                <br />
+                <Text>
+                  <a href="/">{this.props.institution}</a>
+                </Text>
+              </Col>
+            </Row>
           </Col>
-          <Col xs={24} md="content">
+          <Col sm={12} md="content" style={{ paddingRight: 0 }}>
             <Button type="primary" icon="info-circle" onClick={this.showModal}>
               Contact Info
             </Button>
             <br />
             <br />
-            <Popover
-              placement="left"
-              // title="hi"
-              content={this.popMessage}
-              trigger="click"
-            >
+            <Popover placement="left" content={this.popMessage} trigger="click">
               <Button type="default" icon="edit">
                 Suggest Edit
               </Button>
