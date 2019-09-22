@@ -11,10 +11,26 @@ import Dashboard from "./Dashboard";
 const { Content } = Layout;
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      authorID: ""
+    };
+
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+
+  handleSearch(authorID) {
+    this.setState({
+      authorID: authorID
+    });
+  }
+
   render() {
     return (
       <ScreenClassProvider id="page-container">
-        <PageHeader />
+        <PageHeader onSelect={this.handleSearch} />
 
         <Content id="page-content">
           <Dashboard />

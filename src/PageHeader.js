@@ -1,28 +1,31 @@
 import React, { Component } from "react";
-import { Input, Layout, Menu, Row, Col, Icon } from "antd";
+import { Layout, Menu, Row, Col, Icon } from "antd";
 import Logo from "./Logo"
 import profile from "./assets/profile.svg"
 
 import "./PageHeader.css";
+import AuthorSearch from "./AuthorSearch";
 
 const { Header } = Layout;
-const { Search } = Input;
 
 const headerHeight = "40px"
 
 class PageHeader extends Component {
-  handleClick = e => {
-    console.log("click ", e);
-    this.setState({
-      current: e.key
-    });
-  };
+  constructor(props) {
+    super(props);
+
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+
+  handleSearch(value) {
+    this.props.onSelect(value);
+  }
 
   render() {
     return (
       <div className="header-container">
         <div className="header-news">
-          A new version will be released on December 25th. Stay tuned!
+          {this.props.news}
         </div>
         <Header>
           <Row type="flex">
@@ -61,10 +64,9 @@ class PageHeader extends Component {
               </Menu>
             </Col>
 
-            <Col xs={0} sm={14} md={16} lg={19}  className="search-container">
-              <Search
-                placeholder="input search text"
-                onSearch={value => console.log(value)}
+            <Col xs={0} sm={14} md={16} lg={19} className="search-container">
+              <AuthorSearch
+                onSelect={this.handleSearch}
                 style={{ width: 300 }}
               />
             </Col>
