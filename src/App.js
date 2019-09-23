@@ -33,7 +33,7 @@ class App extends Component {
         <PageHeader onSelect={this.handleSearch} />
 
         <Content id="page-content">
-          <Dashboard />
+          <Dashboard authorID={this.state.authorID} />
         </Content>
 
         <Layout>
