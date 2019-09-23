@@ -9,27 +9,87 @@ import emailLogo from "./assets/email.svg";
 import phoneLogo from "./assets/phone.svg";
 import googleLogo from "./assets/google.svg";
 import websiteLogo from "./assets/website.svg";
+import scopusLogo from "./assets/scopus.svg";
+import avatar from "./assets/profile.svg";
+import axios from "axios";
 
 const { Title, Text } = Typography;
 
 const contactIcons = {
-  email: emailLogo ,
-  website: websiteLogo ,
-  scholar: googleLogo ,
-  linkedin: linkedinLogo ,
-  phone: phoneLogo
+  email: emailLogo,
+  website: websiteLogo,
+  scholar: googleLogo,
+  linkedin: linkedinLogo,
+  phone: phoneLogo,
+  scopus: scopusLogo
 };
 
 class UserInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      authorInfo: {
+        first: "",
+        last: "",
+        rank: "",
+        departments: "",
+        institution: ""
+      },
       showContactModal: false,
       contactInfo: this.props.contactInfo.map(item => ({
         ...item,
         icon: contactIcons[item.type]
       }))
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.authorID !== prevProps.authorID) {
+      console.log("UserInfo: made api call");
+      this.fetchAuthorInfo();
+    }
+  }
+
+  async fetchAuthorInfo() {
+    try {
+      const response = await axios.get(`/a/${this.props.authorID}`);
+      const authorInfo = {
+        first: response.data.first,
+        last: response.data.last,
+        rank: "",
+        department: response.data.departments[0].name,
+        institution: response.data.institution.name,
+        contact: response.data.contact
+      };
+
+      authorInfo.contact.forEach(item => {
+        let contactType = item.type.toLowerCase();
+        let iconType = Object.keys(contactIcons).filter(
+          icon => contactType.indexOf(icon) >= 0
+        );
+        item.icon = contactIcons[iconType];
+        if (contactType.indexOf("email") >= 0) {
+          item.text = item.address;
+          item.address = `mailto:${item.address}`;
+        } else if (contactType.indexOf("phone") >= 0) {
+          item.text = item.address;
+          item.address = null;
+        } else if (contactType.indexOf("scholar") >= 0) {
+          item.text = "Google Scholar";
+        } else if (contactType.indexOf("scopus") >= 0) {
+          item.text = item.type;
+        } else if (contactType.indexOf("website") >= 0) {
+          item.text = item.type;
+        }
+      });
+
+      this.setState({
+        authorInfo: authorInfo
+      });
+    } catch (e) {
+      console.log(e);
+      this.setState({ authorInfo: {} });
+    }
   }
 
   showModal = () => {
@@ -67,7 +127,7 @@ class UserInfo extends Component {
                 <Avatar
                   size={120}
                   icon="user"
-                  src={this.props.avatar}
+                  src={avatar}
                   style={{
                     border: "3px solid #fff",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, .4)"
@@ -77,23 +137,25 @@ class UserInfo extends Component {
               </Col>
               <Col xs={12} md={6}>
                 <Title level={2}>
-                  <span className="first-name">{this.props.first}</span>
+                  <span className="first-name">
+                    {this.state.authorInfo.first}
+                  </span>
                   <span> </span>
                   <span
                     className="last-name"
                     style={{ textTransform: "uppercase" }}
                   >
-                    {this.props.last}
+                    {this.state.authorInfo.last}
                   </span>
                 </Title>
-                {this.props.rank}
+                {this.state.authorInfo.rank}
                 <br />
                 <Text>
-                  <a href="/">{this.props.department}</a>
+                  <a href="/">{this.state.authorInfo.department}</a>
                 </Text>
                 <br />
                 <Text>
-                  <a href="/">{this.props.institution}</a>
+                  <a href="/">{this.state.authorInfo.institution}</a>
                 </Text>
               </Col>
             </Row>
@@ -118,7 +180,7 @@ class UserInfo extends Component {
               footer={null}
             >
               <List
-                dataSource={this.state.contactInfo}
+                dataSource={this.state.authorInfo.contact}
                 renderItem={item => (
                   <List.Item
                     style={{

@@ -25,6 +25,7 @@ class App extends Component {
     this.setState({
       authorID: authorID
     });
+    console.log(`got authorID from AuthorSearch: ${authorID}`);
   }
 
   render() {
