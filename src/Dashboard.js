@@ -5,7 +5,8 @@ import ScoreCards from "./ScoreCards";
 // import ChartTable from "./ChartTable";
 import "./Dashboard.css";
 import Papers from "./Papers";
-import avatar from "./assets/pooria.jpg"
+import avatar from "./assets/pooria.jpg";
+import axios from "axios";
 
 const { TabPane } = Tabs;
 
@@ -25,8 +26,65 @@ const info = {
   ]
 };
 
-
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      params: {},
+      papers: []
+    };
+
+    this.handleHit = this.handleHit.bind(this);
+  }
+
+  handleHit(data) {
+    this.setState({ params: data });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.params === prevState.params) {
+      return;
+    }
+    const key = Object.keys(this.state.params)[0];
+
+    switch (key) {
+      case "year":
+        this.fetchPapers("trend", this.state.params);
+        break;
+      case "coID":
+        this.fetchPapers("network", this.state.params);
+        break;
+      case "tag":
+        this.fetchPapers("keywords", this.state.params);
+        break;
+      case "q":
+        this.fetchPapers("journals", this.state.params);
+        break;
+      default:
+        console.log("default");
+    }
+  }
+
+  async fetchPapers(route, params) {
+    try {
+      const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
+        params: params
+      });
+      const tableData = response.data.map((value, index) => {
+        return {
+          key: index + 1,
+          ...value
+        };
+      });
+
+      this.setState({ papers: tableData });
+    } catch (e) {
+      console.log(e);
+      this.setState({ papers: [] });
+    }
+  }
+
   render() {
     return (
       <div className="dashboard-container">
@@ -56,8 +114,11 @@ class Dashboard extends Component {
             }
             key="1"
           >
-            <ScoreCards authorID={this.props.authorID} />
-            <Papers authorID={this.props.authorID} />
+            <ScoreCards
+              authorID={this.props.authorID}
+              callback={this.handleHit}
+            />
+            <Papers authorID={this.props.authorID} papers={this.state.papers} />
           </TabPane>
           <TabPane
             tab={

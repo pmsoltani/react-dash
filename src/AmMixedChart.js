@@ -168,7 +168,7 @@ class AmMixedChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback(data);
+    this.props.callback({year: data.year});
   }
 
   componentWillUnmount() {

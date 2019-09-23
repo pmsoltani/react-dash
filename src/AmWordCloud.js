@@ -74,8 +74,8 @@ class AmWordCloud extends Component {
       "hit",
       e => {
         const data = {
-          papers: e.target.dataItem.dataContext.word,
-          citations: e.target.dataItem.dataContext.value
+          tag: e.target.dataItem.dataContext.word,
+          value: e.target.dataItem.dataContext.value
         };
         this.handleHit(data);
       },
@@ -86,7 +86,7 @@ class AmWordCloud extends Component {
   }
 
   handleHit(data) {
-    this.props.callback(data);
+    this.props.callback({tag: data.tag});
   }
 
   componentWillUnmount() {

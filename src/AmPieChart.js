@@ -78,11 +78,20 @@ class AmPieChart extends Component {
       });
     });
 
+    pieSeries.slices.template.events.on(
+      "hit",
+      e => {
+        const data = e.target.dataItem.dataContext;
+        this.handleHit(data);
+      },
+      this
+    );
+
     return chart;
   }
 
   handleHit(data) {
-    this.props.callback(data);
+    this.props.callback({q: data.rank.toLowerCase()});
   }
 
   componentWillUnmount() {

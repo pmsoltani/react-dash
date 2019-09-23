@@ -33,6 +33,12 @@ class ScoreCards extends Component {
         // margin: "24x -24px 0px -24px"
       },
     };
+
+    this.handleHit = this.handleHit.bind(this);
+  }
+
+  handleHit(data) {
+    this.props.callback(data)
   }
 
   render() {
@@ -59,6 +65,7 @@ class ScoreCards extends Component {
                   <AmMixedChart
                     style={chartStyles}
                     authorID={this.props.authorID}
+                    callback={this.handleHit}
                   />
                 </TabPane>
                 <TabPane
@@ -73,6 +80,7 @@ class ScoreCards extends Component {
                   <AmChordChart
                     style={chartStyles}
                     authorID={this.props.authorID}
+                    callback={this.handleHit}
                   />
                 </TabPane>
                 <TabPane
@@ -87,6 +95,7 @@ class ScoreCards extends Component {
                   <AmWordCloud
                     style={chartStyles}
                     authorID={this.props.authorID}
+                    callback={this.handleHit}
                   />
                 </TabPane>
                 <TabPane
@@ -101,6 +110,7 @@ class ScoreCards extends Component {
                   <AmPieChart
                     style={chartStyles}
                     authorID={this.props.authorID}
+                    callback={this.handleHit}
                   />
                 </TabPane>
               </Tabs>

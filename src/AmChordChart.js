@@ -132,8 +132,8 @@ class AmChordChart extends Component {
       "hit",
       e => {
         const data = {
-          papers: e.target.dataItem.dataContext.from,
-          citations: e.target.dataItem.dataContext.to
+          from: e.target.dataItem.dataContext.from,
+          to: e.target.dataItem.dataContext.to
         };
         this.handleHit(data);
       },
@@ -155,7 +155,7 @@ class AmChordChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback(data);
+    this.props.callback({coID: data.to});
   }
 
   componentWillUnmount() {
