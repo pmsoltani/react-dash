@@ -42,7 +42,7 @@ class ScoreCards extends Component {
           <Col xs={8}>
             <Card hoverable>
               <Tabs
-                defaultActiveKey="2"
+                defaultActiveKey="1"
                 size="small"
                 animated={{ tabPane: false }}
                 tabPosition="left"
@@ -84,7 +84,10 @@ class ScoreCards extends Component {
                   }
                   key="3"
                 >
-                  <AmWordCloud style={chartStyles} />
+                  <AmWordCloud
+                    style={chartStyles}
+                    authorID={this.props.authorID}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -95,7 +98,10 @@ class ScoreCards extends Component {
                   }
                   key="4"
                 >
-                  <AmPieChart style={chartStyles} />
+                  <AmPieChart
+                    style={chartStyles}
+                    authorID={this.props.authorID}
+                  />
                 </TabPane>
               </Tabs>
             </Card>

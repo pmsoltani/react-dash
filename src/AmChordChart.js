@@ -1,54 +1,13 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-// import am4themes_material from "@amcharts/amcharts4/themes/material";
 import axios from "axios";
 
 am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_material);
 
-const data = [
-  { from: "F", to: "P", value: 18 },
-  { from: "Fa", to: "Ra", value: 22 },
-  { from: "K", to: "R", value: 7 },
-  { from: "D", to: "Ai", value: 7 },
-  { from: "Ai", to: "MA", value: 51 },
-  { from: "Sh", to: "Ab", value: 29 },
-  { from: "Sh", to: "Sha", value: 4 },
-  { from: "B", to: "He", value: 6 },
-  { from: "P", to: "Ot", value: 5 },
-  { from: "P", to: "Za", value: 4 },
-  { from: "Gh", to: "Fa", value: 19 },
-  { from: "Am", to: "Fa", value: 8 },
-  { from: "Ai", to: "J", value: 7 },
-
-  { from: "F", to: "Sh", value: 12 },
-  { from: "F", to: "B", value: 6 },
-  { from: "F", to: "AJ", value: 5 },
-  { from: "F", to: "D", value: 15 },
-  { from: "F", to: "S", value: 48 },
-  { from: "F", to: "Af", value: 32 },
-  { from: "F", to: "DG", value: 5 },
-  { from: "F", to: "RG", value: 6 },
-  { from: "F", to: "L", value: 30 },
-  { from: "F", to: "K", value: 6 },
-  { from: "F", to: "Ra", value: 22 },
-  { from: "F", to: "R", value: 7 },
-  { from: "F", to: "Ai", value: 7 },
-  { from: "F", to: "MA", value: 51 },
-  { from: "F", to: "Ab", value: 29 },
-  { from: "F", to: "Sha", value: 4 },
-  { from: "F", to: "He", value: 6 },
-  { from: "F", to: "Ot", value: 5 },
-  { from: "F", to: "Za", value: 4 },
-  { from: "F", to: "Fa", value: 19 },
-  { from: "F", to: "Fa", value: 8 },
-  { from: "F", to: "J", value: 7 },
-  { from: "F", to: "Gh", value: 5 },
-  { from: "F", to: "Am", value: 2 }
-];
+// Data format
+// [{ from: "author1", to: "author2", value: 5 }, ...]
 
 class AmChordChart extends Component {
   constructor(props) {
@@ -58,12 +17,15 @@ class AmChordChart extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.authorID) {
+      this.fetchChordChart();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.authorID !== prevProps.authorID) {
-      console.log("AmChordChart: made api call");
       this.fetchChordChart();
-
-      console.log(this.state.data);
     }
   }
 
@@ -85,10 +47,6 @@ class AmChordChart extends Component {
       console.log(e);
       this.setState({ data: [] });
     }
-  }
-
-  handleHit(data) {
-    this.props.callback(data);
   }
 
   makeChordChart(data) {
@@ -196,6 +154,10 @@ class AmChordChart extends Component {
     return chart;
   }
 
+  handleHit(data) {
+    this.props.callback(data);
+  }
+
   componentWillUnmount() {
     if (this.chart) {
       this.chart.dispose();
@@ -206,9 +168,5 @@ class AmChordChart extends Component {
     return <div id="chordchart" style={this.props.style} />;
   }
 }
-
-AmChordChart.protoTypes = {
-  callback: PropTypes.func
-};
 
 export default AmChordChart;

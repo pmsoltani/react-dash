@@ -1,52 +1,65 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-// import am4themes_material from "@amcharts/amcharts4/themes/material";
+import axios from "axios";
 
 am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_material);
 
-const data = [
-  {
-    country: "Q1",
-    litres: 501.9,
-    pulled: true
-  },
-  {
-    country: "Q2",
-    litres: 301.9
-  },
-  {
-    country: "Q3",
-    litres: 201.1
-  },
-  {
-    country: "Q4",
-    litres: 165.8
-  }
-];
+// Data format
+// [{ rank: "Q1", value: 501.9, pulled: true },...]
 
 class AmPieChart extends Component {
   constructor(props) {
     super(props);
-    this.state = { papers: null, citations: null };
-  }
-
-  handleHit(data) {
-    this.props.callback(data);
+    this.state = {
+      data: []
+    };
   }
 
   componentDidMount() {
+    if (this.props.authorID) {
+      this.fetchPieChart();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.authorID !== prevProps.authorID) {
+      this.fetchPieChart();
+    }
+  }
+
+  async fetchPieChart() {
+    try {
+      const response = await axios.get(`/a/${this.props.authorID}/journals`);
+      const chartData = Object.keys(response.data)
+        .filter(key => response.data[key])
+        .map(key => {
+          return {
+            rank: key.toUpperCase(),
+            value: response.data[key],
+            pulled: key === "q1" ? true : false
+          };
+        });
+
+      this.setState({ data: chartData }, () =>
+        this.makePieChart(this.state.data)
+      );
+    } catch (e) {
+      console.log(e);
+      this.setState({ data: [] });
+    }
+  }
+
+  makePieChart(data) {
     let chart = am4core.create("piechart", am4charts.PieChart);
 
     chart.data = data;
 
     // Add and configure Series
     let pieSeries = chart.series.push(new am4charts.PieSeries());
-    pieSeries.dataFields.value = "litres";
-    pieSeries.dataFields.category = "country";
+    pieSeries.dataFields.category = "rank";
+    pieSeries.dataFields.value = "value";
 
     // Visual configs
     chart.innerRadius = am4core.percent(40);
@@ -65,7 +78,11 @@ class AmPieChart extends Component {
       });
     });
 
-    this.chart = chart;
+    return chart;
+  }
+
+  handleHit(data) {
+    this.props.callback(data);
   }
 
   componentWillUnmount() {
@@ -78,9 +95,5 @@ class AmPieChart extends Component {
     return <div id="piechart" style={this.props.style} />;
   }
 }
-
-AmPieChart.protoTypes = {
-  callback: PropTypes.func
-};
 
 export default AmPieChart;

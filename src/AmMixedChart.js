@@ -1,25 +1,13 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-// import am4themes_material from "@amcharts/amcharts4/themes/material";
 import axios from "axios";
 
 am4core.useTheme(am4themes_animated);
-// am4core.useTheme(am4themes_material);
 
-const data = [
-  { year: "2011", papers: 190, citations: 99 },
-  { year: "2012", papers: 61, citations: 148 },
-  { year: "2013", papers: 31, citations: 368 },
-  { year: "2014", papers: 106, citations: 261 },
-  { year: "2015", papers: 109, citations: 116 },
-  { year: "2016", papers: 16, citations: 27 },
-  { year: "2017", papers: 16, citations: 66 },
-  { year: "2018", papers: 16, citations: 315 },
-  { year: "2019", papers: 16, citations: 380 }
-];
+// Data format
+// [{ year: "2011", papers: 190, citations: 99 },...]
 
 class AmMixedChart extends Component {
   constructor(props) {
@@ -29,12 +17,15 @@ class AmMixedChart extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.authorID) {
+      this.fetchMixedChart();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.authorID !== prevProps.authorID) {
-      console.log("AmMixedChart: made api call");
       this.fetchMixedChart();
-
-      console.log(this.state.data);
     }
   }
 
@@ -49,7 +40,9 @@ class AmMixedChart extends Component {
         };
       });
 
-      this.setState({ data: chartData }, () => this.makeMixedChart(this.state.data));
+      this.setState({ data: chartData }, () =>
+        this.makeMixedChart(this.state.data)
+      );
     } catch (e) {
       console.log(e);
       this.setState({ data: [] });
@@ -178,10 +171,6 @@ class AmMixedChart extends Component {
     this.props.callback(data);
   }
 
-  // componentDidMount() {
-  //   1
-  // }
-
   componentWillUnmount() {
     if (this.chart) {
       this.chart.dispose();
@@ -192,9 +181,5 @@ class AmMixedChart extends Component {
     return <div id="mixedchart" style={this.props.style} />;
   }
 }
-
-AmMixedChart.protoTypes = {
-  callback: PropTypes.func
-};
 
 export default AmMixedChart;
