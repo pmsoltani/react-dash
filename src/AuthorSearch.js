@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { AutoComplete } from "antd";
+import axios from "axios";
 
 const { Option } = AutoComplete;
 
@@ -15,22 +16,33 @@ class AuthorSearch extends Component {
     this.onSelect = this.onSelect.bind(this);
   }
 
-  onFocus = () => {
-    fetch("/a/list")
-      .then(response => response.json())
-      .then(list => {
-        let authorsList = list.map(opt => (
-          <Option key={opt.idFrontend} value={opt.idFrontend}>
-            {`${opt.last}, ${opt.first}`}
-          </Option>
-        ));
+  componentDidMount() {
+    console.log("made api call");
+    this.fetchAuthors()
+  }
 
-        this.setState({
-          authorsList: authorsList,
-          authorsListFiltered: authorsList
-        });
+  async fetchAuthors() {
+    let initMessage = ["fetching faculties"];
+    let errorMessage = ["failed :("];
+    try {
+      this.setState({ authorsListFiltered: initMessage });
+
+      const response = await axios.get("/a/list");
+      const authorsList = response.data.map(opt => (
+        <Option key={opt.idFrontend} value={opt.idFrontend}>
+          {`${opt.last}, ${opt.first}`}
+        </Option>
+      ));
+
+      this.setState({
+        authorsList: authorsList,
+        authorsListFiltered: authorsList
       });
-  };
+    } catch (e) {
+      console.log(e);
+      this.setState({ authorsList: [], authorsListFiltered: errorMessage });
+    }
+  }
 
   onSearch = searchText => {
     let authorsListFiltered = this.state.authorsList;
@@ -56,7 +68,6 @@ class AuthorSearch extends Component {
         onSelect={this.onSelect}
         onSearch={this.onSearch}
         placeholder="faculty search"
-        onFocus={this.onFocus}
         allowClear
       />
     );
