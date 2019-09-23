@@ -42,7 +42,7 @@ class ScoreCards extends Component {
           <Col xs={8}>
             <Card hoverable>
               <Tabs
-                defaultActiveKey="1"
+                defaultActiveKey="2"
                 size="small"
                 animated={{ tabPane: false }}
                 tabPosition="left"
@@ -56,7 +56,10 @@ class ScoreCards extends Component {
                   }
                   key="1"
                 >
-                  <AmMixedChart style={chartStyles} />
+                  <AmMixedChart
+                    style={chartStyles}
+                    authorID={this.props.authorID}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -67,7 +70,10 @@ class ScoreCards extends Component {
                   }
                   key="2"
                 >
-                  <AmChordChart style={chartStyles} />
+                  <AmChordChart
+                    style={chartStyles}
+                    authorID={this.props.authorID}
+                  />
                 </TabPane>
                 <TabPane
                   tab={

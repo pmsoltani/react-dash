@@ -38,6 +38,7 @@ class Dashboard extends Component {
           department={info.department}
           institution={info.institution}
           contactInfo={info.contact}
+          authorID={this.props.authorID}
         />
         <Tabs
           defaultActiveKey="1"
@@ -55,8 +56,8 @@ class Dashboard extends Component {
             }
             key="1"
           >
-            <ScoreCards />
-            <Papers />
+            <ScoreCards authorID={this.props.authorID} />
+            <Papers authorID={this.props.authorID} />
           </TabPane>
           <TabPane
             tab={

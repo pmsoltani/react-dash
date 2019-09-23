@@ -4,6 +4,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 // import am4themes_material from "@amcharts/amcharts4/themes/material";
+import axios from "axios";
 
 am4core.useTheme(am4themes_animated);
 // am4core.useTheme(am4themes_material);
@@ -23,18 +24,43 @@ const data = [
 class AmMixedChart extends Component {
   constructor(props) {
     super(props);
-    this.state = { papers: null, citations: null };
+    this.state = {
+      data: []
+    };
   }
 
-  handleHit(data) {
-    this.props.callback(data);
+  componentDidUpdate(prevProps) {
+    if (this.props.authorID !== prevProps.authorID) {
+      console.log("AmMixedChart: made api call");
+      this.fetchMixedChart();
+
+      console.log(this.state.data);
+    }
   }
 
-  componentDidMount() {
+  async fetchMixedChart() {
+    try {
+      const response = await axios.get(`/a/${this.props.authorID}/trend`);
+      const chartData = Object.keys(response.data).map(key => {
+        return {
+          year: key,
+          papers: response.data[key].papers,
+          citations: response.data[key].citations
+        };
+      });
+
+      this.setState({ data: chartData }, () => this.makeMixedChart(this.state.data));
+    } catch (e) {
+      console.log(e);
+      this.setState({ data: [] });
+    }
+  }
+
+  makeMixedChart(data) {
     let chart = am4core.create("mixedchart", am4charts.XYChart);
 
-    chart.paddingLeft = 0
-    chart.paddingRight = 0
+    chart.paddingLeft = 0;
+    chart.paddingRight = 0;
 
     chart.data = data;
 
@@ -145,8 +171,16 @@ class AmMixedChart extends Component {
     chart.cursor.lineX.fill = am4core.color("#000");
     chart.cursor.lineX.fillOpacity = 0.1;
 
-    this.chart = chart;
+    return chart;
   }
+
+  handleHit(data) {
+    this.props.callback(data);
+  }
+
+  // componentDidMount() {
+  //   1
+  // }
 
   componentWillUnmount() {
     if (this.chart) {

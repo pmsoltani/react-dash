@@ -4,6 +4,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 // import am4themes_material from "@amcharts/amcharts4/themes/material";
+import axios from "axios";
 
 am4core.useTheme(am4themes_animated);
 // am4core.useTheme(am4themes_material);
@@ -52,14 +53,45 @@ const data = [
 class AmChordChart extends Component {
   constructor(props) {
     super(props);
-    this.state = { papers: null, citations: null };
+    this.state = {
+      data: []
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.authorID !== prevProps.authorID) {
+      console.log("AmChordChart: made api call");
+      this.fetchChordChart();
+
+      console.log(this.state.data);
+    }
+  }
+
+  async fetchChordChart() {
+    try {
+      const response = await axios.get(`/a/${this.props.authorID}/network`);
+      const chartData = response.data.map(item => {
+        return {
+          from: item.from.name,
+          to: item.to.name,
+          value: item.value
+        };
+      });
+
+      this.setState({ data: chartData }, () =>
+        this.makeChordChart(this.state.data)
+      );
+    } catch (e) {
+      console.log(e);
+      this.setState({ data: [] });
+    }
   }
 
   handleHit(data) {
     this.props.callback(data);
   }
 
-  componentDidMount() {
+  makeChordChart(data) {
     let chart = am4core.create("chordchart", am4charts.ChordDiagram);
 
     chart.paddingLeft = 0;
@@ -161,7 +193,7 @@ class AmChordChart extends Component {
     slice.cornerRadius = 8;
     slice.innerCornerRadius = 0;
 
-    this.chart = chart;
+    return chart;
   }
 
   componentWillUnmount() {
