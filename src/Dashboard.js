@@ -74,6 +74,14 @@ class Dashboard extends Component {
       const tableData = response.data.map((value, index) => {
         return {
           key: index + 1,
+          tags: [
+            { key: "type", value: value.type },
+            {
+              key: "open_access",
+              value: value.open_access ? "open access" : "close access"
+            },
+            { key: "quartile", value: value.quartile }
+          ],
           ...value
         };
       });
