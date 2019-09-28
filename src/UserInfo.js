@@ -43,9 +43,12 @@ class UserInfo extends Component {
     };
   }
 
+  componentDidMount() {
+    this.fetchAuthorInfo();
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.authorID !== prevProps.authorID) {
-      console.log("UserInfo: made api call");
       this.fetchAuthorInfo();
     }
   }
@@ -87,7 +90,6 @@ class UserInfo extends Component {
         authorInfo: authorInfo
       });
     } catch (e) {
-      console.log(e);
       this.setState({ authorInfo: {} });
     }
   }

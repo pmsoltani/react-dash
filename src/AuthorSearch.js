@@ -17,7 +17,6 @@ class AuthorSearch extends Component {
   }
 
   componentDidMount() {
-    console.log("made api call");
     this.fetchAuthors()
   }
 

@@ -1,36 +1,40 @@
 import React, { Component } from "react";
 import { Layout, Menu, Row, Col, Icon } from "antd";
-import Logo from "./Logo"
-import profile from "./assets/profile.svg"
+import Logo from "./Logo";
+import profile from "./assets/profile.svg";
 
 import "./PageHeader.css";
 import AuthorSearch from "./AuthorSearch";
 
 const { Header } = Layout;
 
-const headerHeight = "40px"
+const headerHeight = "40px";
 
 class PageHeader extends Component {
   constructor(props) {
     super(props);
 
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleLogoClick = this.handleLogoClick.bind(this);
   }
 
   handleSearch(value) {
     this.props.onSelect(value);
   }
 
+  handleLogoClick() {
+    this.props.onClick();
+  }
+
   render() {
     return (
       <div className="header-container">
-        <div className="header-news">
-          {this.props.news}
-        </div>
+        <div className="header-news">{this.props.news}</div>
         <Header>
           <Row type="flex">
             <Col xs={24} sm={10} md={8} lg={5} className="logo-container">
               <Logo
+                onClick={this.handleLogoClick}
                 style={{ fontWeight: 700, fontSize: "48px", color: "#fff" }}
               />
             </Col>

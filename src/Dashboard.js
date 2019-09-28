@@ -62,7 +62,7 @@ class Dashboard extends Component {
         this.fetchPapers("journals", this.state.params);
         break;
       default:
-        console.log("default");
+        break
     }
   }
 
@@ -88,7 +88,6 @@ class Dashboard extends Component {
 
       this.setState({ papers: tableData });
     } catch (e) {
-      console.log(e);
       this.setState({ papers: [] });
     }
   }

@@ -13,12 +13,23 @@ const { Footer } = Layout;
 const { Title, Text, Paragraph } = Typography;
 
 class PageFooter extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleLogoClick = this.handleLogoClick.bind(this);
+  }
+
+  handleLogoClick() {
+    this.props.onClick();
+  }
+
   render() {
     return (
       <Footer className="footer-container">
         <Row>
           <Col xs={24} lg={6}>
             <Logo
+              onClick={this.handleLogoClick}
               style={{
                 fontWeight: 700,
                 fontSize: "72px",
