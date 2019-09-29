@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Card, Tag, Icon } from "antd";
+import { Table, Card, Tag, Icon, Popover } from "antd";
 
 const columns = [
   { title: "#", dataIndex: "key" },
@@ -33,7 +33,11 @@ const columns = [
         doi
       )
   },
-  { title: "# Cited", dataIndex: "cited_cnt" },
+  {
+    title: "# Cited",
+    dataIndex: "cited_cnt",
+    render: cited => <Popover content="content">{cited}</Popover>
+  },
   {
     title: "Source",
     dataIndex: "source",
