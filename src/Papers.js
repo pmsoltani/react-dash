@@ -105,6 +105,7 @@ class Papers extends Component {
           dataSource={this.props.papers}
           columns={columns}
           pagination={{ current: this.state.currentPage }}
+          loading={this.props.loading}
           onChange={this.onChange}
         />
       </Card>

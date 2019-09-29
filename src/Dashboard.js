@@ -4,7 +4,7 @@ import UserInfo from "./UserInfo";
 import ScoreCards from "./ScoreCards";
 import "./Dashboard.css";
 import Papers from "./Papers";
-import avatar from "./assets/profile.svg"
+import avatar from "./assets/profile.svg";
 import axios from "axios";
 
 const { TabPane } = Tabs;
@@ -34,7 +34,8 @@ class Dashboard extends Component {
       firstTime: true,
       params: {},
       papers: [],
-      allPapers: []
+      allPapers: [],
+      papersLoading: false
     };
 
     this.handleHit = this.handleHit.bind(this);
@@ -84,6 +85,7 @@ class Dashboard extends Component {
   }
 
   async fetchPapers(route, params = {}, setAllPapers = false) {
+    this.setState({ papersLoading: true });
     try {
       const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
         params: params
@@ -104,12 +106,12 @@ class Dashboard extends Component {
       });
 
       setAllPapers
-        ? this.setState({ allPapers: tableData })
-        : this.setState({ papers: tableData });
+        ? this.setState({ allPapers: tableData, papersLoading: false })
+        : this.setState({ papers: tableData, papersLoading: false });
     } catch (e) {
       setAllPapers
-        ? this.setState({ allPapers: [] })
-        : this.setState({ papers: [] });
+        ? this.setState({ allPapers: [], papersLoading: false })
+        : this.setState({ papers: [], papersLoading: false });
     }
   }
 
@@ -148,7 +150,10 @@ class Dashboard extends Component {
               authorID={this.props.authorID}
               callback={this.handleHit}
             />
-            <Papers papers={this.state.papers} />
+            <Papers
+              papers={this.state.papers}
+              loading={this.state.papersLoading}
+            />
           </TabPane>
           <TabPane
             tab={
@@ -159,7 +164,10 @@ class Dashboard extends Component {
             }
             key="2"
           >
-            <Papers papers={this.state.allPapers} />
+            <Papers
+              papers={this.state.allPapers}
+              loading={this.state.papersLoading}
+            />
           </TabPane>
         </Tabs>
       </div>
