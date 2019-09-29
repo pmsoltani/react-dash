@@ -78,11 +78,35 @@ const columns = [
 ];
 
 class Papers extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { currentPage: 1 };
+
+    this.onChange = this.onChange.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.papers === prevProps.papers) {
+      return;
+    }
+
+    this.setState({ currentPage: 1 });
+  }
+
+  onChange(pagination) {
+    this.setState({ currentPage: pagination.current });
+  }
+
   render() {
-    console.log(this.props.papers);
     return (
       <Card hoverable>
-        <Table dataSource={this.props.papers} columns={columns} />
+        <Table
+          dataSource={this.props.papers}
+          columns={columns}
+          pagination={{ current: this.state.currentPage }}
+          onChange={this.onChange}
+        />
       </Card>
     );
   }

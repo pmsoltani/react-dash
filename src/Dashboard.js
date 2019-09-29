@@ -4,24 +4,24 @@ import UserInfo from "./UserInfo";
 import ScoreCards from "./ScoreCards";
 import "./Dashboard.css";
 import Papers from "./Papers";
-import avatar from "./assets/pooria.jpg";
+import avatar from "./assets/profile.svg"
 import axios from "axios";
 
 const { TabPane } = Tabs;
 
 const info = {
-  first: "Pooria",
-  last: "Soltani",
-  rank: "Associate Professor",
-  department: "Department of Chemical Engineering",
-  institution: "Sharif University of Technology",
+  first: "First",
+  last: "Last",
+  rank: "Rank",
+  department: "Name of the Department",
+  institution: "Name of the Institution",
   avatar: avatar,
   contact: [
-    { type: "email", address: "/", text: "pooria.ms@gmail.com" },
-    { type: "website", address: "/", text: "sharif.edu/~pmsoltani" },
+    { type: "email", address: "/", text: "first.last@some-email.com" },
+    { type: "website", address: "/", text: "www.google.com" },
     { type: "scholar", address: "/", text: "www.google.com" },
-    { type: "linkedin", address: "/", text: "linkedin.com/in/pmsoltani" },
-    { type: "phone", address: "", text: "+98 939 137 0620" }
+    { type: "linkedin", address: "/", text: "www.linkedin.com" },
+    { type: "phone", address: "", text: "+98 999 123 4567" }
   ]
 };
 
@@ -30,29 +30,40 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
+      activePane: "1",
+      firstTime: true,
       params: {},
       papers: [],
       allPapers: []
     };
 
     this.handleHit = this.handleHit.bind(this);
+    this.handleTabsChange = this.handleTabsChange.bind(this);
   }
 
   handleHit(data) {
     this.setState({ params: data });
   }
 
-  // componentDidMount() {
-  //   this.fetchPapers("papers", {}, true);
-  // }
+  handleTabsChange(key) {
+    this.setState({ activePane: key });
+  }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.params === prevState.params) {
+    if (
+      this.state.activePane === prevState.activePane &&
+      this.state.params === prevState.params &&
+      this.props.authorID === prevProps.authorID
+    ) {
       return;
+    } else if (
+      this.state.activePane === "2" &&
+      (this.props.authorID !== prevProps.authorID || this.state.firstTime)
+    ) {
+      this.fetchPapers("papers", {}, true);
+      this.setState({ firstTime: false });
     }
     const key = Object.keys(this.state.params)[0];
-
-    this.fetchPapers("papers", {}, true);
 
     switch (key) {
       case "year":
@@ -117,10 +128,12 @@ class Dashboard extends Component {
         />
         <Tabs
           defaultActiveKey="1"
+          activeKey={this.state.activePane}
           size="small"
           animated={{ tabPane: false }}
           tabPosition="top"
           className="dashboard-tabs"
+          onChange={this.handleTabsChange}
         >
           <TabPane
             tab={
