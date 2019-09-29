@@ -1,14 +1,20 @@
+// libraries
 import React, { Component } from "react";
 import { Tabs, Icon } from "antd";
-import UserInfo from "./UserInfo";
-import ScoreCards from "./ScoreCards";
-import "./Dashboard.css";
-import Papers from "./Papers";
-import avatar from "./assets/profile.svg";
 import axios from "axios";
+
+// components
+import Papers from "./Papers";
+import ScoreCards from "./ScoreCards";
+import UserInfo from "./UserInfo";
+
+// other assets
+import "./Dashboard.css";
+import avatar from "./assets/profile.svg";
 
 const { TabPane } = Tabs;
 
+// scaffolding for user info data
 const info = {
   first: "First",
   last: "Last",
@@ -31,11 +37,11 @@ class Dashboard extends Component {
 
     this.state = {
       activePane: "1",
-      firstTime: true,
-      params: {},
-      papers: [],
-      allPapers: [],
-      papersLoading: false
+      firstTime: true, // 'Publications' tab has not been activated yet
+      params: {}, // lifted from one of the chart components
+      papers: [], // list of papers to be shown when a chart element is clicked
+      allPapers: [], // list of all papers of an author, for the publications tab
+      papersLoading: false // loading indicator for the 'Papers' component
     };
 
     this.handleHit = this.handleHit.bind(this);
@@ -43,10 +49,19 @@ class Dashboard extends Component {
   }
 
   handleHit(data) {
+    // Handles the lifted state from one of the chart components, when the user
+    // clicks on a chart element, such as a bar on 'AmMixedChart'. The received
+    // data is in one of the following formats:
+    // { year: 2013 } ---> from 'AmMixedChart'
+    // { coID: wejfb13-14v } ---> from 'AmChordChart'
+    // { tag: "computing" } ---> from 'AmWordCloud'
+    // { q: "q3" } ---> from 'AmPieChart'
+
     this.setState({ params: data });
   }
 
   handleTabsChange(key) {
+    // Controls the state of the 'Tabs' component from Ant Design.
     this.setState({ activePane: key });
   }
 
@@ -56,63 +71,70 @@ class Dashboard extends Component {
       this.state.params === prevState.params &&
       this.props.authorID === prevProps.authorID
     ) {
+      // the case when nothing new has happend!
       return;
     } else if (
       this.state.activePane === "2" &&
       (this.props.authorID !== prevProps.authorID || this.state.firstTime)
     ) {
+      // when the 'Publications' tab is activated for the first time, or another
+      // author is selected
       this.fetchPapers("papers", {}, true);
       this.setState({ firstTime: false });
-    }
-    const key = Object.keys(this.state.params)[0];
-
-    switch (key) {
-      case "year":
-        this.fetchPapers("trend", this.state.params);
-        break;
-      case "coID":
-        this.fetchPapers("network", this.state.params);
-        break;
-      case "tag":
-        this.fetchPapers("keywords", this.state.params);
-        break;
-      case "q":
-        this.fetchPapers("journals", this.state.params);
-        break;
-      default:
-        break;
+    } else if (this.state.params !== prevState.params) {
+      // when a chart element is clicked
+      const routeMapper = {
+        year: "trend",
+        coID: "network",
+        tag: "keywords",
+        q: "journals"
+      };
+      const key = Object.keys(this.state.params)[0];
+      this.fetchPapers(routeMapper[key], this.state.params);
     }
   }
 
   async fetchPapers(route, params = {}, setAllPapers = false) {
+    // Fetches papers data from the specified endpoint of the API, using the
+    // 'route' and 'params' arguments. Then submits the data to be shown in the
+    // 'Papers' component (either the one in the 'Dashboard' tab, or the one in
+    // the 'Publications' tab, using the 'setAllPapers' argument).
+
+    // 1. enable the table's 'loading' indicator
     this.setState({ papersLoading: true });
+
     try {
+      // 2. fetch the data from a certain API endpoint
       const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
         params: params
       });
-      const tableData = response.data.map((value, index) => {
-        return {
-          key: index + 1,
-          tags: [
-            { key: "type", value: value.type },
-            { key: "quartile", value: value.quartile },
-            {
-              key: "open_access",
-              value: value.open_access ? "open access" : "close access"
-            }
-          ],
-          ...value
-        };
-      });
 
+      // 3. re-shape the received data to be shown by 'Papers' component
+      const tableData = response.data.map((val, idx) => ({
+        key: idx + 1, // used both by React and the index column of the table
+        tags: [
+          { key: "type", value: val.type },
+          { key: "quartile", value: val.quartile },
+          {
+            key: "open_access",
+            value: val.open_access ? "open access" : "close access"
+          }
+        ],
+        ...val
+      }));
+
+      // 4. submit the data to the state, to be shown by 'Papers' component
       setAllPapers
-        ? this.setState({ allPapers: tableData, papersLoading: false })
-        : this.setState({ papers: tableData, papersLoading: false });
+        ? this.setState({ allPapers: tableData })
+        : this.setState({ papers: tableData });
     } catch (e) {
       setAllPapers
-        ? this.setState({ allPapers: [], papersLoading: false })
-        : this.setState({ papers: [], papersLoading: false });
+        ? this.setState({ allPapers: [] })
+        : this.setState({ papers: [] });
     }
+
+    // 5. disable the table's 'loading' indicator
+    this.setState({ papersLoading: false });
   }
 
   render() {
@@ -131,11 +153,11 @@ class Dashboard extends Component {
         <Tabs
           defaultActiveKey="1"
           activeKey={this.state.activePane}
+          onChange={this.handleTabsChange}
           size="small"
           animated={{ tabPane: false }}
           tabPosition="top"
           className="dashboard-tabs"
-          onChange={this.handleTabsChange}
         >
           <TabPane
             tab={
@@ -155,6 +177,7 @@ class Dashboard extends Component {
               loading={this.state.papersLoading}
             />
           </TabPane>
+
           <TabPane
             tab={
               <span>

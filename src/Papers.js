@@ -1,23 +1,35 @@
+// libraries
 import React, { Component } from "react";
-import { Table, Card, Tag, Icon, Popover } from "antd";
+import { Table, Card, Tag, Icon } from "antd";
 
-const columns = [
-  { title: "#", dataIndex: "key" },
+const tagColors = {
+  q1: "green",
+  q2: "gold",
+  q3: "volcano",
+  q4: "red",
+  "close access": "magenta",
+  year: "#108ee9",
+  default: "geekblue"
+};
+const tableColumns = [
+  { title: "#", dataIndex: "key" }, // the index column
   {
     title: "Title",
     dataIndex: "title",
     sorter: (a, b) => (a.title > b.title ? 1 : -1)
   },
   {
+    // wrap the year in a nice-looking 'Tag'
     title: "Year",
     dataIndex: "date",
     render: y => (
-      <Tag color="#108ee9" key={y}>
+      <Tag color={tagColors.year} key={y}>
         {y}
       </Tag>
     )
   },
   {
+    // make the doi into an external link to the paper
     title: "DOI",
     dataIndex: "doi",
     render: doi =>
@@ -35,8 +47,8 @@ const columns = [
   },
   {
     title: "# Cited",
-    dataIndex: "cited_cnt",
-    render: cited => <Popover content="content">{cited}</Popover>
+    dataIndex: "cited_cnt"
+    // render: cited => <Popover content="content">{cited}</Popover>
   },
   {
     title: "Source",
@@ -49,30 +61,14 @@ const columns = [
     render: tags => (
       <span>
         {tags
-          .filter(tag => tag.value)
+          .filter(tag => tag.value) // only show tags with a value
           .map(tag => {
-            let color = tag.length > 5 ? "geekblue" : "geekblue";
-            if (tag.key === "quartile") {
-              if (tag.value === "q1") {
-                color = "green";
-              } else if (tag.value === "q2") {
-                color = "gold";
-              } else if (tag.value === "q3") {
-                color = "volcano";
-              } else if (tag.value === "q4") {
-                color = "red";
-              } else if (tag.value === "null") {
-                color = "red";
-              }
-            } else if (tag.key === "open_access") {
-              if (tag.value === "close access") {
-                color = "magenta";
-              }
-            }
-
             return (
-              <Tag color={color} key={tag.key}>
-                {tag.value ? tag.value.toUpperCase() : null}
+              <Tag
+                color={tagColors[tag.value] || tagColors.default}
+                key={tag.key}
+              >
+                {tag.value.toUpperCase()}
               </Tag>
             );
           })}
@@ -87,32 +83,43 @@ class Papers extends Component {
 
     this.state = { currentPage: 1 };
 
-    this.onChange = this.onChange.bind(this);
+    this.tableRef = React.createRef();
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.papers === prevProps.papers) {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.papers === prevProps.papers &&
+      this.state.currentPage === prevState.currentPage
+    ) {
       return;
+    } else if (this.props.papers !== prevProps.papers) {
+      this.setState({ currentPage: 1 });
     }
-
-    this.setState({ currentPage: 1 });
+    this.handleScroll();
   }
 
-  onChange(pagination) {
+  handleChange(pagination) {
     this.setState({ currentPage: pagination.current });
+  }
+
+  handleScroll() {
+    this.tableRef.current.scrollIntoView({ behavior: "smooth" });
   }
 
   render() {
     return (
-      <Card hoverable>
-        <Table
-          dataSource={this.props.papers}
-          columns={columns}
-          pagination={{ current: this.state.currentPage }}
-          loading={this.props.loading}
-          onChange={this.onChange}
-        />
-      </Card>
+      <div ref={this.tableRef}>
+        <Card hoverable>
+          <Table
+            dataSource={this.props.papers}
+            columns={tableColumns}
+            pagination={{ current: this.state.currentPage }}
+            loading={this.props.loading}
+            onChange={this.handleChange}
+          />
+        </Card>
+      </div>
     );
   }
 }
