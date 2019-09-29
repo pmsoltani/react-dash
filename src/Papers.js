@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Table, Card, Tag, Icon } from "antd";
 
-// import "./Papers.css";
-
 const columns = [
   { title: "#", dataIndex: "key" },
   {
@@ -80,30 +78,6 @@ const columns = [
 ];
 
 class Papers extends Component {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     data: { key: "1", papers: null, citations: null }
-  //   };
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   // Any time props.data changes, update state.
-  //   if (this.props.data !== prevProps.data) {
-  //     this.setState({
-  //       data: this.props.data
-  //     });
-  //   }
-  // }
-
-  // getData = () => [
-  //   {
-  //     key: "1",
-  //     papers: this.state.data.papers,
-  //     citations: this.state.data.citations
-  //   }
-  // ];
-
   render() {
     console.log(this.props.papers);
     return (

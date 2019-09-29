@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Tabs, Icon } from "antd";
 import UserInfo from "./UserInfo";
 import ScoreCards from "./ScoreCards";
-// import ChartTable from "./ChartTable";
 import "./Dashboard.css";
 import Papers from "./Papers";
 import avatar from "./assets/pooria.jpg";
@@ -32,7 +31,8 @@ class Dashboard extends Component {
 
     this.state = {
       params: {},
-      papers: []
+      papers: [],
+      allPapers: []
     };
 
     this.handleHit = this.handleHit.bind(this);
@@ -42,11 +42,17 @@ class Dashboard extends Component {
     this.setState({ params: data });
   }
 
+  // componentDidMount() {
+  //   this.fetchPapers("papers", {}, true);
+  // }
+
   componentDidUpdate(prevProps, prevState) {
     if (this.state.params === prevState.params) {
       return;
     }
     const key = Object.keys(this.state.params)[0];
+
+    this.fetchPapers("papers", {}, true);
 
     switch (key) {
       case "year":
@@ -62,11 +68,11 @@ class Dashboard extends Component {
         this.fetchPapers("journals", this.state.params);
         break;
       default:
-        break
+        break;
     }
   }
 
-  async fetchPapers(route, params) {
+  async fetchPapers(route, params = {}, setAllPapers = false) {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
         params: params
@@ -76,19 +82,23 @@ class Dashboard extends Component {
           key: index + 1,
           tags: [
             { key: "type", value: value.type },
+            { key: "quartile", value: value.quartile },
             {
               key: "open_access",
               value: value.open_access ? "open access" : "close access"
-            },
-            { key: "quartile", value: value.quartile }
+            }
           ],
           ...value
         };
       });
 
-      this.setState({ papers: tableData });
+      setAllPapers
+        ? this.setState({ allPapers: tableData })
+        : this.setState({ papers: tableData });
     } catch (e) {
-      this.setState({ papers: [] });
+      setAllPapers
+        ? this.setState({ allPapers: [] })
+        : this.setState({ papers: [] });
     }
   }
 
@@ -125,7 +135,7 @@ class Dashboard extends Component {
               authorID={this.props.authorID}
               callback={this.handleHit}
             />
-            <Papers authorID={this.props.authorID} papers={this.state.papers} />
+            <Papers papers={this.state.papers} />
           </TabPane>
           <TabPane
             tab={
@@ -136,7 +146,7 @@ class Dashboard extends Component {
             }
             key="2"
           >
-            <Papers />
+            <Papers papers={this.state.allPapers} />
           </TabPane>
         </Tabs>
       </div>
