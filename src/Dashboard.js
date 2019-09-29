@@ -1,28 +1,33 @@
+// libraries
 import React, { Component } from "react";
 import { Tabs, Icon } from "antd";
-import UserInfo from "./UserInfo";
-import ScoreCards from "./ScoreCards";
-// import ChartTable from "./ChartTable";
-import "./Dashboard.css";
-import Papers from "./Papers";
-import avatar from "./assets/pooria.jpg";
 import axios from "axios";
+
+// components
+import Papers from "./Papers";
+import ScoreCards from "./ScoreCards";
+import UserInfo from "./UserInfo";
+
+// other assets
+import "./Dashboard.css";
+import avatar from "./assets/profile.svg";
 
 const { TabPane } = Tabs;
 
+// scaffolding for user info data
 const info = {
-  first: "Pooria",
-  last: "Soltani",
-  rank: "Associate Professor",
-  department: "Department of Chemical Engineering",
-  institution: "Sharif University of Technology",
+  first: "First",
+  last: "Last",
+  rank: "Rank",
+  department: "Name of the Department",
+  institution: "Name of the Institution",
   avatar: avatar,
   contact: [
-    { type: "email", address: "/", text: "pooria.ms@gmail.com" },
-    { type: "website", address: "/", text: "sharif.edu/~pmsoltani" },
+    { type: "email", address: "/", text: "first.last@some-email.com" },
+    { type: "website", address: "/", text: "www.google.com" },
     { type: "scholar", address: "/", text: "www.google.com" },
-    { type: "linkedin", address: "/", text: "linkedin.com/in/pmsoltani" },
-    { type: "phone", address: "", text: "+98 939 137 0620" }
+    { type: "linkedin", address: "/", text: "www.linkedin.com" },
+    { type: "phone", address: "", text: "+98 999 123 4567" }
   ]
 };
 
@@ -31,65 +36,105 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-      params: {},
-      papers: []
+      activePane: "1",
+      firstTime: true, // 'Publications' tab has not been activated yet
+      params: {}, // lifted from one of the chart components
+      papers: [], // list of papers to be shown when a chart element is clicked
+      allPapers: [], // list of all papers of an author, for the publications tab
+      papersLoading: false // loading indicator for the 'Papers' component
     };
 
     this.handleHit = this.handleHit.bind(this);
+    this.handleTabsChange = this.handleTabsChange.bind(this);
   }
 
   handleHit(data) {
+    // Handles the lifted state from one of the chart components, when the user
+    // clicks on a chart element, such as a bar on 'AmMixedChart'. The received
+    // data is in one of the following formats:
+    // { year: 2013 } ---> from 'AmMixedChart'
+    // { coID: wejfb13-14v } ---> from 'AmChordChart'
+    // { tag: "computing" } ---> from 'AmWordCloud'
+    // { q: "q3" } ---> from 'AmPieChart'
+
     this.setState({ params: data });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.params === prevState.params) {
-      return;
-    }
-    const key = Object.keys(this.state.params)[0];
+  handleTabsChange(key) {
+    // Controls the state of the 'Tabs' component from Ant Design.
+    this.setState({ activePane: key });
+  }
 
-    switch (key) {
-      case "year":
-        this.fetchPapers("trend", this.state.params);
-        break;
-      case "coID":
-        this.fetchPapers("network", this.state.params);
-        break;
-      case "tag":
-        this.fetchPapers("keywords", this.state.params);
-        break;
-      case "q":
-        this.fetchPapers("journals", this.state.params);
-        break;
-      default:
-        break
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.activePane === prevState.activePane &&
+      this.state.params === prevState.params &&
+      this.props.authorID === prevProps.authorID
+    ) {
+      // the case when nothing new has happend!
+      return;
+    } else if (
+      this.state.activePane === "2" &&
+      (this.props.authorID !== prevProps.authorID || this.state.firstTime)
+    ) {
+      // when the 'Publications' tab is activated for the first time, or another
+      // author is selected
+      this.fetchPapers("papers", {}, true);
+      this.setState({ firstTime: false });
+    } else if (this.state.params !== prevState.params) {
+      // when a chart element is clicked
+      const routeMapper = {
+        year: "trend",
+        coID: "network",
+        tag: "keywords",
+        q: "journals"
+      };
+      const key = Object.keys(this.state.params)[0];
+      this.fetchPapers(routeMapper[key], this.state.params);
     }
   }
 
-  async fetchPapers(route, params) {
+  async fetchPapers(route, params = {}, setAllPapers = false) {
+    // Fetches papers data from the specified endpoint of the API, using the
+    // 'route' and 'params' arguments. Then submits the data to be shown in the
+    // 'Papers' component (either the one in the 'Dashboard' tab, or the one in
+    // the 'Publications' tab, using the 'setAllPapers' argument).
+
+    // 1. enable the table's 'loading' indicator
+    this.setState({ papersLoading: true });
+
     try {
+      // 2. fetch the data from a certain API endpoint
       const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
         params: params
       });
-      const tableData = response.data.map((value, index) => {
-        return {
-          key: index + 1,
-          tags: [
-            { key: "type", value: value.type },
-            {
-              key: "open_access",
-              value: value.open_access ? "open access" : "close access"
-            },
-            { key: "quartile", value: value.quartile }
-          ],
-          ...value
-        };
-      });
 
-      this.setState({ papers: tableData });
+      // 3. re-shape the received data to be shown by 'Papers' component
+      const tableData = response.data.map((val, idx) => ({
+        key: idx + 1, // used both by React and the index column of the table
+        tags: [
+          { key: "type", value: val.type },
+          { key: "quartile", value: val.quartile },
+          {
+            key: "open_access",
+            value: val.open_access ? "open access" : "close access"
+          }
+        ],
+        ...val
+      }));
+
+      // 4. submit the data to the state, to be shown by 'Papers' component
+      setAllPapers
+        ? this.setState({ allPapers: tableData })
+        : this.setState({ papers: tableData });
     } catch (e) {
-      this.setState({ papers: [] });
+      setAllPapers
+        ? this.setState({ allPapers: [] })
+        : this.setState({ papers: [] });
     }
+
+    // 5. disable the table's 'loading' indicator
+    this.setState({ papersLoading: false });
   }
 
   render() {
@@ -107,6 +152,8 @@ class Dashboard extends Component {
         />
         <Tabs
           defaultActiveKey="1"
+          activeKey={this.state.activePane}
+          onChange={this.handleTabsChange}
           size="small"
           animated={{ tabPane: false }}
           tabPosition="top"
@@ -125,8 +172,12 @@ class Dashboard extends Component {
               authorID={this.props.authorID}
               callback={this.handleHit}
             />
-            <Papers authorID={this.props.authorID} papers={this.state.papers} />
+            <Papers
+              papers={this.state.papers}
+              loading={this.state.papersLoading}
+            />
           </TabPane>
+
           <TabPane
             tab={
               <span>
@@ -136,7 +187,10 @@ class Dashboard extends Component {
             }
             key="2"
           >
-            <Papers />
+            <Papers
+              papers={this.state.allPapers}
+              loading={this.state.papersLoading}
+            />
           </TabPane>
         </Tabs>
       </div>
