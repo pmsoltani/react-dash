@@ -1,9 +1,11 @@
+// libraries
 import React, { Component } from "react";
 import { Typography, List, Avatar, Modal, Button, Icon, Popover } from "antd";
-import "./UserInfo.css";
 import { Container, Row, Col } from "react-grid-system";
+import axios from "axios";
 
-// import profile from "./assets/profile.svg";
+// other assets
+import "./UserInfo.css";
 import linkedinLogo from "./assets/linkedin.svg";
 import emailLogo from "./assets/email.svg";
 import phoneLogo from "./assets/phone.svg";
@@ -11,36 +13,26 @@ import googleLogo from "./assets/google.svg";
 import websiteLogo from "./assets/website.svg";
 import scopusLogo from "./assets/scopus.svg";
 import avatar from "./assets/profile.svg";
-import axios from "axios";
 
 const { Title, Text } = Typography;
 
-const contactIcons = {
-  email: emailLogo,
-  website: websiteLogo,
-  scholar: googleLogo,
-  linkedin: linkedinLogo,
-  phone: phoneLogo,
-  scopus: scopusLogo
+// used to add icons and appropriate texts to each contact
+const contactMapper = {
+  email: { icon: emailLogo, text: "" },
+  website: { icon: websiteLogo, text: "Personal Website" },
+  scholar: { icon: googleLogo, text: "Google Scholar" },
+  linkedin: { icon: linkedinLogo, text: "LinkedIn Profile" },
+  phone: { icon: phoneLogo, text: "" },
+  scopus: { icon: scopusLogo, text: "Scopus Profile" }
 };
 
 class UserInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      authorInfo: {
-        first: "",
-        last: "",
-        rank: "",
-        departments: "",
-        institution: ""
-      },
-      showContactModal: false,
-      contactInfo: this.props.contactInfo.map(item => ({
-        ...item,
-        icon: contactIcons[item.type]
-      }))
-    };
+
+    this.state = { authorInfo: {}, showContactModal: false };
+
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   componentDidMount() {
@@ -55,8 +47,12 @@ class UserInfo extends Component {
 
   async fetchAuthorInfo() {
     try {
+      // 1. fetch the data from API
       const response = await axios.get(`/a/${this.props.authorID}`);
+
+      // 2. re-shape the data and add new entities (such as default avatar)
       const authorInfo = {
+        avatar: response.data.picture || avatar,
         first: response.data.first,
         last: response.data.last,
         rank: "",
@@ -65,46 +61,38 @@ class UserInfo extends Component {
         contact: response.data.contact
       };
 
-      authorInfo.contact.forEach(item => {
-        let contactType = item.type.toLowerCase();
-        let iconType = Object.keys(contactIcons).filter(
-          icon => contactType.indexOf(icon) >= 0
+      // 3. processing contacts (adding icons and modifying text and address)
+      authorInfo.contact.forEach(contact => {
+        const contactType = contact.type.toLowerCase();
+        const contactMapperType = Object.keys(contactMapper).find(
+          item => contactType.indexOf(item) >= 0
         );
-        item.icon = contactIcons[iconType];
-        if (contactType.indexOf("email") >= 0) {
-          item.text = item.address;
-          item.address = `mailto:${item.address}`;
-        } else if (contactType.indexOf("phone") >= 0) {
-          item.text = item.address;
-          item.address = null;
-        } else if (contactType.indexOf("scholar") >= 0) {
-          item.text = "Google Scholar";
-        } else if (contactType.indexOf("scopus") >= 0) {
-          item.text = item.type;
-        } else if (contactType.indexOf("website") >= 0) {
-          item.text = item.type;
+
+        if (!contact.icon) {
+          contact.icon = contactMapper[contactMapperType].icon;
+        }
+        if (!contact.text) {
+          contact.text = contactMapper[contactMapperType].text
+            ? contactMapper[contactMapperType].text
+            : contact.address;
+        }
+        if (contactMapperType === "phone") {
+          contact.address = null;
         }
       });
 
-      this.setState({
-        authorInfo: authorInfo
-      });
+      // 4. setting the state to display the data
+      this.setState({ authorInfo: authorInfo });
     } catch (e) {
       this.setState({ authorInfo: {} });
     }
   }
 
-  showModal = () => {
-    this.setState({
-      showContactModal: true
-    });
-  };
-
-  handleCancel = e => {
-    this.setState({
-      showContactModal: false
-    });
-  };
+  toggleModal() {
+    this.setState(prevState => ({
+      showContactModal: !prevState.showContactModal
+    }));
+  }
 
   popMessage = (
     <div>
@@ -128,8 +116,7 @@ class UserInfo extends Component {
               <Col xs="content" style={{ paddingLeft: 0 }}>
                 <Avatar
                   size={120}
-                  icon="user"
-                  src={avatar}
+                  src={this.state.authorInfo.avatar}
                   style={{
                     border: "3px solid #fff",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, .4)"
@@ -163,7 +150,7 @@ class UserInfo extends Component {
             </Row>
           </Col>
           <Col sm={12} md="content" style={{ paddingRight: 0 }}>
-            <Button type="primary" icon="info-circle" onClick={this.showModal}>
+            <Button type="primary" icon="info-circle" onClick={this.toggleModal}>
               Contact Info
             </Button>
             <br />
@@ -177,7 +164,7 @@ class UserInfo extends Component {
             <Modal
               title="Contact"
               visible={this.state.showContactModal}
-              onCancel={this.handleCancel}
+              onCancel={this.toggleModal}
               closable
               footer={null}
             >
