@@ -10,26 +10,8 @@ import UserInfo from "./UserInfo";
 
 // other assets
 import "./Dashboard.css";
-import avatar from "./assets/profile.svg";
 
 const { TabPane } = Tabs;
-
-// scaffolding for user info data
-const info = {
-  first: "First",
-  last: "Last",
-  rank: "Rank",
-  department: "Name of the Department",
-  institution: "Name of the Institution",
-  avatar: avatar,
-  contact: [
-    { type: "email", address: "/", text: "first.last@some-email.com" },
-    { type: "website", address: "/", text: "www.google.com" },
-    { type: "scholar", address: "/", text: "www.google.com" },
-    { type: "linkedin", address: "/", text: "www.linkedin.com" },
-    { type: "phone", address: "", text: "+98 999 123 4567" }
-  ]
-};
 
 class Dashboard extends Component {
   constructor(props) {
@@ -140,16 +122,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard-container">
-        <UserInfo
-          first={info.first}
-          last={info.last}
-          rank={info.rank}
-          avatar={info.avatar}
-          department={info.department}
-          institution={info.institution}
-          contactInfo={info.contact}
-          authorID={this.props.authorID}
-        />
+        <UserInfo authorID={this.props.authorID} />
         <Tabs
           defaultActiveKey="1"
           activeKey={this.state.activePane}
