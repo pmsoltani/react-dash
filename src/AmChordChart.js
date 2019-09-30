@@ -35,7 +35,9 @@ class AmChordChart extends Component {
       const chartData = response.data.map(item => {
         return {
           from: item.from.name,
+          fromID: item.from.idFrontend,
           to: item.to.name,
+          toID: item.to.idFrontend,
           value: item.value
         };
       });
@@ -44,7 +46,6 @@ class AmChordChart extends Component {
         this.makeChordChart(this.state.data)
       );
     } catch (e) {
-      console.log(e);
       this.setState({ data: [] });
     }
   }
@@ -133,7 +134,9 @@ class AmChordChart extends Component {
       e => {
         const data = {
           from: e.target.dataItem.dataContext.from,
-          to: e.target.dataItem.dataContext.to
+          fromID: e.target.dataItem.dataContext.fromID,
+          to: e.target.dataItem.dataContext.to,
+          toID: e.target.dataItem.dataContext.toID
         };
         this.handleHit(data);
       },
@@ -155,7 +158,8 @@ class AmChordChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({coID: data.to});
+    const coID = this.props.authorID === data.fromID ? data.toID : data.fromID;
+    this.props.callback({ coID: coID });
   }
 
   componentWillUnmount() {
