@@ -8,7 +8,7 @@ import axios from "axios";
 am4core.useTheme(am4themes_animated);
 
 // Data format
-// [{ rank: "Q1", value: 501.9, pulled: true },...]
+// [{ name: "q1", percentiles: [{ name: "p1", value: 12}, ...]}, ...]
 
 class AmSunburstChart extends Component {
   componentDidMount() {
@@ -26,16 +26,8 @@ class AmSunburstChart extends Component {
   async fetchSunburstChart() {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/qs`);
-      const chartData = response.data.map(q => ({
-        name: q.name.toUpperCase(),
-        percentiles: q.percentiles.map(p => ({
-          name: p.name.toUpperCase(),
-          value: p.value
-        }))
-      }));
-      this.chart = this.makeSunburstChart(chartData);
+      this.chart = this.makeSunburstChart(response.data);
     } catch (e) {
-      console.log(e);
       this.chart = this.makeSunburstChart([]);
     }
   }
@@ -46,6 +38,7 @@ class AmSunburstChart extends Component {
     chart.data = data;
 
     chart.colors.step = 4;
+    chart.fontSize = 12;
     chart.innerRadius = am4core.percent(20);
 
     // Add and configure Series
@@ -60,7 +53,10 @@ class AmSunburstChart extends Component {
     // this makes labels to be hidden if they don't fit
     level0.labels.template.truncate = true;
     level0.labels.template.hideOversized = true;
-    level0.labels.template.text = "{category}";
+    level0.labels.template.text = "[text-transform:capitalize]{category}";
+    level0.slices.template.tooltipText =
+      "[text-transform:capitalize]{category}: " +
+      "{value.percent.formatNumber('#.#')}% ({value.value})";
 
     level0.labels.template.adapter.add("rotation", (rotation, target) => {
       target.maxWidth =
@@ -79,12 +75,12 @@ class AmSunburstChart extends Component {
     chart.seriesTemplates.setKey("1", level1);
     level1.fillOpacity = 0.75;
     level1.hiddenInLegend = true;
-    level1.labels.template.text = "{category}";
+    level1.labels.template.text = "[text-transform:capitalize]{category}";
 
     chart.legend = new am4charts.Legend();
     chart.legend.position = "left";
-    chart.legend.width = 20;
-    chart.legend.labels.template.text = "{category}";
+    chart.legend.width = 60;
+    chart.legend.labels.template.text = "[text-transform:capitalize]{category}";
     chart.legend.valueLabels.template.text = null;
 
     level0.slices.template.events.on(
@@ -103,8 +99,7 @@ class AmSunburstChart extends Component {
   }
 
   handleHit(data) {
-    console.log({ rank: data.toLowerCase() });
-    this.props.callback({ rank: data.toLowerCase() });
+    this.props.callback({ rank: data });
   }
 
   componentWillUnmount() {
