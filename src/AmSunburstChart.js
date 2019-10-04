@@ -49,10 +49,12 @@ class AmSunburstChart extends Component {
     let level0 = new am4plugins_sunburst.SunburstSeries();
     level0.hiddenInLegend = false;
     chart.seriesTemplates.setKey("0", level0);
+    level0.slices.template.cornerRadius = 4;
 
     // this makes labels to be hidden if they don't fit
     level0.labels.template.truncate = true;
     level0.labels.template.hideOversized = true;
+
     level0.labels.template.text = "[text-transform:capitalize]{category}";
     level0.slices.template.tooltipText =
       "[text-transform:capitalize]{category}: " +
