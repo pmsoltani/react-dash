@@ -10,13 +10,6 @@ am4core.useTheme(am4themes_animated);
 // [{ rank: "Q1", value: 501.9, pulled: true },...]
 
 class AmPieChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: []
-    };
-  }
-
   componentDidMount() {
     if (this.props.authorID) {
       this.fetchPieChart();
@@ -31,23 +24,26 @@ class AmPieChart extends Component {
 
   async fetchPieChart() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/journals`);
-      const chartData = Object.keys(response.data)
-        .filter(key => response.data[key])
-        .map(key => {
-          return {
-            rank: key.toUpperCase(),
-            value: response.data[key],
-            pulled: key === "q1" ? true : false
-          };
-        });
+      const response = await axios.get(`/a/${this.props.authorID}/qs`);
+      let chartData = response.data
+        .filter(q => q.name !== "undefined")
+        .map(q => ({
+          rank: q.name,
+          value: q.percentiles.reduce((sum, current) => sum + current.value, 0)
+        }));
 
-      this.setState({ data: chartData }, () =>
-        this.makePieChart(this.state.data)
-      );
+      chartData[0].pulled = true;
+      chartData = [
+        ...chartData,
+        {
+          rank: "undefined",
+          value: response.data[response.data.length - 1].value
+        }
+      ];
+
+      this.chart = this.makePieChart(chartData);
     } catch (e) {
-      console.log(e);
-      this.setState({ data: [] });
+      this.chart = this.makePieChart([]);
     }
   }
 
@@ -60,6 +56,11 @@ class AmPieChart extends Component {
     let pieSeries = chart.series.push(new am4charts.PieSeries());
     pieSeries.dataFields.category = "rank";
     pieSeries.dataFields.value = "value";
+
+    pieSeries.labels.template.text = "[text-transform:capitalize]{category}";
+    pieSeries.slices.template.tooltipText =
+      "[text-transform:capitalize]{category}: " +
+      "{value.percent.formatNumber('#.#')}% ({value.value})";
 
     // Visual configs
     chart.innerRadius = am4core.percent(40);
@@ -81,8 +82,7 @@ class AmPieChart extends Component {
     pieSeries.slices.template.events.on(
       "hit",
       e => {
-        const data = e.target.dataItem.dataContext;
-        this.handleHit(data);
+        this.handleHit(e.target.dataItem.dataContext.rank);
       },
       this
     );
@@ -91,7 +91,7 @@ class AmPieChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({q: data.rank.toLowerCase()});
+    this.props.callback({ rank: data });
   }
 
   componentWillUnmount() {
