@@ -25,7 +25,7 @@ class AmSunburstChart extends Component {
 
   async fetchSunburstChart() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/qs`);
+      const response = await axios.get(`/a/${this.props.authorID}/jmetrics`);
       this.chart = this.makeSunburstChart(response.data);
     } catch (e) {
       this.chart = this.makeSunburstChart([]);
@@ -101,7 +101,9 @@ class AmSunburstChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({ metric: data });
+    if (data !== "undefined") {
+      this.props.callback({ metric: data });
+    }
   }
 
   componentWillUnmount() {

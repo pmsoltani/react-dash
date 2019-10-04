@@ -24,13 +24,14 @@ class AmPieChart extends Component {
 
   async fetchPieChart() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/qs`);
+      const response = await axios.get(`/a/${this.props.authorID}/jmetrics`);
       let chartData = response.data
         .filter(q => q.name !== "undefined")
         .map(q => ({
           rank: q.name,
           value: q.percentiles.reduce((sum, current) => sum + current.value, 0)
-        }));
+        }))
+        .filter(q => q.value);
 
       chartData[0].pulled = true;
       chartData = [
@@ -91,7 +92,9 @@ class AmPieChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({ metric: data });
+    if (data !== "undefined") {
+      this.props.callback({ metric: data });
+    }
   }
 
   componentWillUnmount() {
