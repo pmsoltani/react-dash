@@ -36,8 +36,9 @@ class Dashboard extends Component {
     // data is in one of the following formats:
     // { year: 2013 } ---> from 'AmMixedChart'
     // { coID: wejfb13-14v } ---> from 'AmChordChart'
-    // { tag: "computing" } ---> from 'AmWordCloud'
-    // { q: "q3" } ---> from 'AmPieChart'
+    // { keyword: "computing" } ---> from 'AmWordCloud'
+    // { metric: "q3" } ---> from 'AmPieChart'
+    // { metric: "p79" } ---> from 'AmSunburstChart'
 
     this.setState({ params: data });
   }
@@ -65,18 +66,11 @@ class Dashboard extends Component {
       this.setState({ firstTime: false });
     } else if (this.state.params !== prevState.params) {
       // when a chart element is clicked
-      const routeMapper = {
-        year: "trend",
-        coID: "network",
-        tag: "keywords",
-        q: "journals"
-      };
-      const key = Object.keys(this.state.params)[0];
-      this.fetchPapers(routeMapper[key], this.state.params);
+      this.fetchPapers(this.state.params);
     }
   }
 
-  async fetchPapers(route, params = {}, setAllPapers = false) {
+  async fetchPapers(params = {}, setAllPapers = false) {
     // Fetches papers data from the specified endpoint of the API, using the
     // 'route' and 'params' arguments. Then submits the data to be shown in the
     // 'Papers' component (either the one in the 'Dashboard' tab, or the one in
@@ -87,7 +81,7 @@ class Dashboard extends Component {
 
     try {
       // 2. fetch the data from a certain API endpoint
-      const response = await axios.get(`/a/${this.props.authorID}/${route}`, {
+      const response = await axios.get(`/a/${this.props.authorID}/papers`, {
         params: params
       });
 
