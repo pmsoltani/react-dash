@@ -53,6 +53,9 @@ class AmMixedChart extends Component {
     yearAxis.renderer.grid.template.disabled = true;
     yearAxis.renderer.grid.template.location = 0;
 
+    yearAxis.numberFormatter = new am4core.NumberFormatter();
+    yearAxis.numberFormatter.numberFormat = "#";
+
     let papersAxis = chart.yAxes.push(new am4charts.ValueAxis());
     papersAxis.renderer.minWidth = 50;
     papersAxis.min = 0;
