@@ -86,18 +86,24 @@ class Dashboard extends Component {
       });
 
       // 3. re-shape the received data to be shown by 'Papers' component
-      const tableData = response.data.map((val, idx) => ({
+      const tableData = response.data.map((paper, idx) => ({
         key: idx + 1, // used both by React and the index column of the table
         tags: [
-          { key: "type", value: val.type },
-          { key: "quartile", value: val.quartile },
+          { key: "type", value: paper.typeDescription },
+          { key: "quartile", value: paper.quartile },
           {
             key: "open_access",
-            value: val.open_access ? "open access" : "close access"
+            value: paper.open_access ? "open access" : "close access"
           }
         ],
-        ...val
+        ...paper
       }));
+
+      tableData.map(paper =>
+        paper.authors
+          .filter(author => author.idFrontend === this.props.authorID)
+          .map(author => (author.bold = true))
+      );
 
       // 4. submit the data to the state, to be shown by 'Papers' component
       setAllPapers
