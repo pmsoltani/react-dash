@@ -91,7 +91,7 @@ class AmPieChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({ rank: data });
+    this.props.callback({ metric: data });
   }
 
   componentWillUnmount() {
