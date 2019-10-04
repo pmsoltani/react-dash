@@ -28,9 +28,14 @@ class AuthorSearch extends Component {
 
       const response = await axios.get("/a/list");
       const authorsList = response.data.map(opt => (
-        <Option key={opt.idFrontend} value={opt.idFrontend}>
-          <span style={{ fontWeight: 700 }}>{opt.last}, </span>
-          {opt.first}
+        <Option
+          key={opt.idFrontend}
+          value={opt.idFrontend}
+          text={`${opt.last}, ${opt.first}`}
+        >
+          <span style={{ fontWeight: 700 }}>{opt.last}</span>
+          <span>, </span>
+          <span>{opt.first}</span>
         </Option>
       ));
 
@@ -39,7 +44,6 @@ class AuthorSearch extends Component {
         authorsListFiltered: authorsList
       });
     } catch (e) {
-      console.log(e);
       this.setState({ authorsList: [], authorsListFiltered: errorMessage });
     }
   }
@@ -49,7 +53,7 @@ class AuthorSearch extends Component {
     this.setState({
       authorsListFiltered: authorsListFiltered.filter(
         author =>
-          author.props.children
+          author.props.text
             .toLowerCase()
             .indexOf(searchText.toLowerCase()) >= 0
       )
@@ -68,6 +72,7 @@ class AuthorSearch extends Component {
         onSelect={this.onSelect}
         onSearch={this.onSearch}
         placeholder="faculty search"
+        optionLabelProp="text"
         allowClear
       />
     );
