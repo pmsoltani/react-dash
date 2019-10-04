@@ -17,7 +17,7 @@ class AuthorSearch extends Component {
   }
 
   componentDidMount() {
-    this.fetchAuthors()
+    this.fetchAuthors();
   }
 
   async fetchAuthors() {
@@ -29,7 +29,8 @@ class AuthorSearch extends Component {
       const response = await axios.get("/a/list");
       const authorsList = response.data.map(opt => (
         <Option key={opt.idFrontend} value={opt.idFrontend}>
-          {`${opt.last}, ${opt.first}`}
+          <span style={{ fontWeight: 700 }}>{opt.last}, </span>
+          {opt.first}
         </Option>
       ));
 
