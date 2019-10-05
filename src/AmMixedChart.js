@@ -10,13 +10,6 @@ am4core.useTheme(am4themes_animated);
 // [{ year: "2011", papers: 190, citations: 99 },...]
 
 class AmMixedChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: []
-    };
-  }
-
   componentDidMount() {
     if (this.props.authorID) {
       this.fetchMixedChart();
@@ -32,20 +25,9 @@ class AmMixedChart extends Component {
   async fetchMixedChart() {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/trend`);
-      const chartData = Object.keys(response.data).map(key => {
-        return {
-          year: key,
-          papers: response.data[key].papers,
-          citations: response.data[key].citations
-        };
-      });
-
-      this.setState({ data: chartData }, () =>
-        this.makeMixedChart(this.state.data)
-      );
+      this.makeMixedChart(response.data);
     } catch (e) {
       console.log(e);
-      this.setState({ data: [] });
     }
   }
 
@@ -70,6 +52,9 @@ class AmMixedChart extends Component {
     yearAxis.dataFields.category = "year";
     yearAxis.renderer.grid.template.disabled = true;
     yearAxis.renderer.grid.template.location = 0;
+
+    yearAxis.numberFormatter = new am4core.NumberFormatter();
+    yearAxis.numberFormatter.numberFormat = "#";
 
     let papersAxis = chart.yAxes.push(new am4charts.ValueAxis());
     papersAxis.renderer.minWidth = 50;

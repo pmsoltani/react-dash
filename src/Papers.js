@@ -113,6 +113,22 @@ class Papers extends Component {
         <Card hoverable>
           <Table
             dataSource={this.props.papers}
+            expandedRowRender={record => {
+              return record.authors.map(author => {
+                if (author.bold) {
+                  return (
+                    <span style={{ fontWeight: 700 }} key={author.idFrontend}>
+                      {`${author.first} ${author.last}, `}
+                    </span>
+                  );
+                }
+                return (
+                  <span key={author.idFrontend}>
+                    {`${author.first} ${author.last}, `}
+                  </span>
+                );
+              });
+            }}
             columns={tableColumns}
             pagination={{ current: this.state.currentPage }}
             loading={this.props.loading}

@@ -12,7 +12,8 @@ import phoneLogo from "./assets/phone.svg";
 import googleLogo from "./assets/google.svg";
 import websiteLogo from "./assets/website.svg";
 import scopusLogo from "./assets/scopus.svg";
-import avatar from "./assets/profile.svg";
+import avatarMale from "./assets/profile-male.svg";
+import avatarFemale from "./assets/profile-female.svg";
 
 const { Title, Text } = Typography;
 
@@ -24,6 +25,15 @@ const contactMapper = {
   linkedin: { icon: linkedinLogo, text: "LinkedIn Profile" },
   phone: { icon: phoneLogo, text: "" },
   scopus: { icon: scopusLogo, text: "Scopus Profile" }
+};
+
+const authorRankMapper = {
+  assistant: "Assistant Professor",
+  associate: "Associate Professor",
+  professor: "Full Professor",
+  adjunct: "Adjunct Professor",
+  visiting: "Visiting Professor",
+  emeritus: "Professor Emeritus"
 };
 
 class UserInfo extends Component {
@@ -52,13 +62,20 @@ class UserInfo extends Component {
 
       // 2. re-shape the data and add new entities (such as default avatar)
       const authorInfo = {
-        avatar: response.data.picture || avatar,
+        avatar:
+          response.data.picture || response.data.sex === "m"
+            ? avatarMale
+            : avatarFemale,
         first: response.data.first,
         last: response.data.last,
-        rank: "",
+        rank:
+          authorRankMapper[response.data.rank.toLowerCase()] ||
+          response.data.rank,
         department: response.data.departments[0].name,
-        institution: response.data.institution.name,
-        contact: response.data.contact
+        institution: response.data.institutions[0].name,
+        contact: response.data.contact.filter(
+          contact => contact.type !== "Institution ID"
+        )
       };
 
       // 3. processing contacts (adding icons and modifying text and address)
@@ -150,7 +167,11 @@ class UserInfo extends Component {
             </Row>
           </Col>
           <Col sm={12} md="content" style={{ paddingRight: 0 }}>
-            <Button type="primary" icon="info-circle" onClick={this.toggleModal}>
+            <Button
+              type="primary"
+              icon="info-circle"
+              onClick={this.toggleModal}
+            >
               Contact Info
             </Button>
             <br />

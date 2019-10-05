@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Layout, Menu, Row, Col, Icon } from "antd";
 import Logo from "./Logo";
-import profile from "./assets/profile.svg";
+import profile from "./assets/profile-male.svg";
 
 import "./PageHeader.css";
 import AuthorSearch from "./AuthorSearch";

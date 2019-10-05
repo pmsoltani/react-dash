@@ -32,9 +32,11 @@ class AmChordChart extends Component {
       // 2. re-shaping the retrieved data
       const chartData = response.data.map(item => {
         return {
-          from: item.from.name, // name to be shown by the chart
+          fromFirst: item.from.first, // first name
+          fromLast: item.from.last, // last name to be shown by the chart
           fromID: item.from.idFrontend, // id to be sent to the parent component
-          to: item.to.name, // name to be shown by the chart
+          toFirst: item.to.first, // first name
+          toLast: item.to.last, // last name to be shown by the chart
           toID: item.to.idFrontend, // id to be sent to the parent component
           value: item.value // number of joint papers between author and coAuthor
         };
@@ -48,7 +50,6 @@ class AmChordChart extends Component {
 
   makeChordChart(data) {
     let chart = am4core.create("chordchart", am4charts.ChordDiagram);
-    console.log("ID", chart.id);
     chart.data = data;
 
     chart.paddingLeft = 0;
@@ -56,8 +57,8 @@ class AmChordChart extends Component {
 
     chart.colors.step = 4;
 
-    chart.dataFields.fromName = "from";
-    chart.dataFields.toName = "to";
+    chart.dataFields.fromName = "fromLast";
+    chart.dataFields.toName = "toLast";
     chart.dataFields.value = "value";
     // chart.dataFields.color = "color";
 
@@ -114,7 +115,7 @@ class AmChordChart extends Component {
     let linkTemplate = chart.links.template;
     linkTemplate.strokeOpacity = 0;
     linkTemplate.fillOpacity = 0.15;
-    linkTemplate.tooltipText = "{fromName} & {toName}:{value.value}";
+    linkTemplate.tooltipText = "{fromName} & {toName}: {value}";
 
     let hoverState = linkTemplate.states.create("hover");
     hoverState.properties.fillOpacity = 1;
@@ -146,7 +147,6 @@ class AmChordChart extends Component {
 
   componentWillUnmount() {
     if (this.chart) {
-      console.log("attempting to dispose chord");
       this.chart.dispose();
     }
   }

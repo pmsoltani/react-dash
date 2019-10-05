@@ -10,13 +10,6 @@ am4core.useTheme(am4themes_animated);
 // [{ word: "keyword1", value: 3 },...]
 
 class AmWordCloud extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: []
-    };
-  }
-
   componentDidMount() {
     if (this.props.authorID) {
       this.fetchWordCloud();
@@ -32,19 +25,9 @@ class AmWordCloud extends Component {
   async fetchWordCloud() {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/keywords`);
-      const chartData = Object.keys(response.data).map(key => {
-        return {
-          word: key,
-          value: response.data[key]
-        };
-      });
-
-      this.setState({ data: chartData }, () =>
-        this.makeWordCloud(this.state.data)
-      );
+      this.chart = this.makeWordCloud(response.data);
     } catch (e) {
-      console.log(e);
-      this.setState({ data: [] });
+      this.chart = this.makeWordCloud([]);
     }
   }
 
@@ -58,27 +41,21 @@ class AmWordCloud extends Component {
 
     series.data = data;
 
-    series.dataFields.word = "word";
+    series.dataFields.word = "keyword";
     series.dataFields.value = "value";
     series.angles = [0, 0, 0, 90];
 
     series.colors = new am4core.ColorSet();
     series.colors.step = 4;
     series.colors.passOptions = {};
-    series.labels.template.tooltipText = "{word}:\n[bold]{value}[/]";
+    series.labels.template.tooltipText = "{word}: [bold]{value}[/]";
 
     let hoverState = series.labels.template.states.create("hover");
     hoverState.properties.fill = am4core.color("#000000");
 
     series.labels.template.events.on(
       "hit",
-      e => {
-        const data = {
-          tag: e.target.dataItem.dataContext.word,
-          value: e.target.dataItem.dataContext.value
-        };
-        this.handleHit(data);
-      },
+      e => this.handleHit(e.target.dataItem.dataContext.keyword),
       this
     );
 
@@ -86,7 +63,7 @@ class AmWordCloud extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({tag: data.tag});
+    this.props.callback({ keyword: data });
   }
 
   componentWillUnmount() {
