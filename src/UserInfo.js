@@ -123,10 +123,10 @@ class UserInfo extends Component {
 
   contactRender(contact) {
     const contactItem = (
-      <div>
+      <>
         <Avatar src={contact.icon} style={{ marginRight: "8px" }} />
         {contact.text}
-      </div>
+      </>
     );
 
     if (contact.showLink)
