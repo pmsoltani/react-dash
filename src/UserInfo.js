@@ -93,8 +93,9 @@ class UserInfo extends Component {
             ? contactMapper[contactMapperType].text
             : contact.address;
         }
-        if (contactMapperType === "phone") {
-          contact.address = null;
+        if (contactMapperType === "phone") contact.address = null;
+        if (contactMapperType === "email") {
+          contact.address = `mailto:${contact.address}`;
         }
       });
 
