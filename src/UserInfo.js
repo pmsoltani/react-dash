@@ -63,9 +63,9 @@ class UserInfo extends Component {
       // 2. re-shape the data and add new entities (such as default avatar)
       const authorInfo = {
         avatar:
-          response.data.picture || response.data.sex === "m"
-            ? avatarMale
-            : avatarFemale,
+          response.data.picture || response.data.sex === "f"
+            ? avatarFemale
+            : avatarMale,
         first: response.data.first,
         last: response.data.last,
         rank:
