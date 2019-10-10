@@ -81,7 +81,7 @@ class Papers extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { currentPage: 1 };
+    this.state = { currentPage: 1, expandedRows: [] };
 
     this.tableRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -94,13 +94,25 @@ class Papers extends Component {
     ) {
       return;
     } else if (this.props.papers !== prevProps.papers) {
-      this.setState({ currentPage: 1 });
+      this.setState({ currentPage: 1, expandedRows: [] });
     }
     this.handleScroll();
   }
 
   handleChange(pagination) {
-    this.setState({ currentPage: pagination.current });
+    this.setState({ currentPage: pagination.current, expandedRows: [] });
+  }
+
+  handleRowExpand(record) {
+    this.setState(prevState =>
+      prevState.expandedRows.includes(record.key)
+        ? {
+            expandedRows: prevState.expandedRows.filter(
+              key => key !== record.key
+            )
+          }
+        : { expandedRows: [...prevState.expandedRows, record.key] }
+    );
   }
 
   handleScroll() {
@@ -139,6 +151,8 @@ class Papers extends Component {
             pagination={{ current: this.state.currentPage }}
             loading={this.props.loading}
             onChange={this.handleChange}
+            onExpand={(expanded, record) => this.handleRowExpand(record)}
+            expandedRowKeys={this.state.expandedRows}
           />
         </Card>
       </div>
