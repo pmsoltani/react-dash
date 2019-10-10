@@ -199,7 +199,11 @@ class UserInfo extends Component {
                       paddingBottom: "6px"
                     }}
                   >
-                    <a href={item.address}>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={item.address}
+                    >
                       <List.Item.Meta
                         avatar={<Avatar src={item.icon} />}
                         title={item.text}
