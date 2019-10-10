@@ -205,10 +205,8 @@ class UserInfo extends Component {
                       rel="noopener noreferrer"
                       href={item.address}
                     >
-                      <List.Item.Meta
-                        avatar={<Avatar src={item.icon} />}
-                        title={item.text}
-                      />
+                      <Avatar src={item.icon} style={{marginRight: "8px"}}/>
+                      {item.text}
                     </a>
                   </List.Item>
                 )}
