@@ -107,28 +107,34 @@ class Papers extends Component {
     this.tableRef.current.scrollIntoView({ behavior: "smooth" });
   }
 
+  authorsRender(paper) {
+    try {
+      const authorsList = [];
+      paper.authors.forEach(author =>
+        authorsList.push(
+          <span
+            style={author.bold && { fontWeight: 700 }}
+            key={author.idFrontend}
+          >
+            {`${author.first} ${author.last}`}
+          </span>
+        )
+      );
+      return (
+        <div>{authorsList.reduce((prev, curr) => [prev, ", ", curr])}</div>
+      );
+    } catch (e) {
+      return "Authors not available";
+    }
+  }
+
   render() {
     return (
       <div ref={this.tableRef}>
         <Card hoverable>
           <Table
             dataSource={this.props.papers}
-            expandedRowRender={record => {
-              return record.authors.map(author => {
-                if (author.bold) {
-                  return (
-                    <span style={{ fontWeight: 700 }} key={author.idFrontend}>
-                      {`${author.first} ${author.last}, `}
-                    </span>
-                  );
-                }
-                return (
-                  <span key={author.idFrontend}>
-                    {`${author.first} ${author.last}, `}
-                  </span>
-                );
-              });
-            }}
+            expandedRowRender={paper => this.authorsRender(paper)}
             columns={tableColumns}
             pagination={{ current: this.state.currentPage }}
             loading={this.props.loading}
