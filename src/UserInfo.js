@@ -19,12 +19,12 @@ const { Title, Text } = Typography;
 
 // used to add icons and appropriate texts to each contact
 const contactMapper = {
-  email: { icon: emailLogo, text: "" },
-  website: { icon: websiteLogo, text: "Personal Website" },
-  scholar: { icon: googleLogo, text: "Google Scholar" },
-  linkedin: { icon: linkedinLogo, text: "LinkedIn Profile" },
-  phone: { icon: phoneLogo, text: "" },
-  scopus: { icon: scopusLogo, text: "Scopus Profile" }
+  email: { icon: emailLogo, text: "", showLink: true },
+  website: { icon: websiteLogo, text: "Personal Website", showLink: true },
+  scholar: { icon: googleLogo, text: "Google Scholar", showLink: true },
+  linkedin: { icon: linkedinLogo, text: "LinkedIn Profile", showLink: true },
+  phone: { icon: phoneLogo, text: "", showLink: false },
+  scopus: { icon: scopusLogo, text: "Scopus Profile", showLink: true }
 };
 
 const authorRankMapper = {
@@ -81,20 +81,21 @@ class UserInfo extends Component {
       // 3. processing contacts (adding icons and modifying text and address)
       authorInfo.contact.forEach(contact => {
         const contactType = contact.type.toLowerCase();
-        const contactMapperType = Object.keys(contactMapper).find(
+        contact.shortType = Object.keys(contactMapper).find(
           item => contactType.indexOf(item) >= 0
         );
 
+        contact.showLink = contactMapper[contact.shortType].showLink;
         if (!contact.icon) {
-          contact.icon = contactMapper[contactMapperType].icon;
+          contact.icon = contactMapper[contact.shortType].icon;
         }
         if (!contact.text) {
-          contact.text = contactMapper[contactMapperType].text
-            ? contactMapper[contactMapperType].text
+          contact.text = contactMapper[contact.shortType].text
+            ? contactMapper[contact.shortType].text
             : contact.address;
         }
-        if (contactMapperType === "phone") {
-          contact.address = null;
+        if (contact.shortType === "email") {
+          contact.address = `mailto:${contact.address}`;
         }
       });
 
@@ -119,6 +120,24 @@ class UserInfo extends Component {
       </Text>
     </div>
   );
+
+  contactRender(contact) {
+    const contactItem = (
+      <div>
+        <Avatar src={contact.icon} style={{ marginRight: "8px" }} />
+        {contact.text}
+      </div>
+    );
+
+    if (contact.showLink)
+      return (
+        <a target="_blank" rel="noopener noreferrer" href={contact.address}>
+          {contactItem}
+        </a>
+      );
+
+    return contactItem;
+  }
 
   render() {
     return (
@@ -191,7 +210,7 @@ class UserInfo extends Component {
             >
               <List
                 dataSource={this.state.authorInfo.contact}
-                renderItem={item => (
+                renderItem={contact => (
                   <List.Item
                     style={{
                       borderBottom: 0,
@@ -199,12 +218,7 @@ class UserInfo extends Component {
                       paddingBottom: "6px"
                     }}
                   >
-                    <a href={item.address}>
-                      <List.Item.Meta
-                        avatar={<Avatar src={item.icon} />}
-                        title={item.text}
-                      />
-                    </a>
+                    {this.contactRender(contact)}
                   </List.Item>
                 )}
               />
