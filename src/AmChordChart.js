@@ -130,7 +130,7 @@ class AmChordChart extends Component {
           to: e.target.dataItem.dataContext.to,
           toID: e.target.dataItem.dataContext.toID
         };
-        this.handleHit(data);
+        if (data.fromID === this.props.authorID) this.handleHit(data);
       },
       this
     );
