@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-grid-system";
 import axios from "axios";
 
 // other assets
-import "./UserInfo.css";
+import "./AuthorInfo.css";
 import linkedinLogo from "./assets/linkedin.svg";
 import emailLogo from "./assets/email.svg";
 import phoneLogo from "./assets/phone.svg";
@@ -53,7 +53,7 @@ const mapOrder = (array, order, key) => {
   return array;
 };
 
-class UserInfo extends Component {
+class AuthorInfo extends Component {
   constructor(props) {
     super(props);
 
@@ -264,4 +264,4 @@ class UserInfo extends Component {
   }
 }
 
-export default UserInfo;
+export default AuthorInfo;
