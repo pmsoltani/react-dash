@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-grid-system";
 import axios from "axios";
 
 // other assets
-import "./UserInfo.css";
+import "./AuthorInfo.css";
 import linkedinLogo from "./assets/linkedin.svg";
 import emailLogo from "./assets/email.svg";
 import phoneLogo from "./assets/phone.svg";
@@ -36,7 +36,24 @@ const authorRankMapper = {
   emeritus: "Professor Emeritus"
 };
 
-class UserInfo extends Component {
+const departmentTypesOrder = [
+  "Department",
+  "Faculty",
+  "Research Center",
+  "Center of Excellence",
+  "Education Center"
+];
+
+const mapOrder = (array, order, key) => {
+  array.sort((a, b) => {
+    const A = a[key];
+    const B = b[key];
+    return order.indexOf(A) > order.indexOf(B) ? 1 : -1;
+  });
+  return array;
+};
+
+class AuthorInfo extends Component {
   constructor(props) {
     super(props);
 
@@ -61,21 +78,38 @@ class UserInfo extends Component {
       const response = await axios.get(`/a/${this.props.authorID}`);
 
       // 2. re-shape the data and add new entities (such as default avatar)
+      let authorRank, authorDepartment, authorInstitution;
+      try {
+        if (Object.values(authorRankMapper).includes(response.data.rank)) {
+          authorRank = response.data.rank;
+        } else {
+          authorRank = authorRankMapper[response.data.rank.toLowerCase()];
+        }
+      } catch {}
+
+      try {
+        response.data.departments = mapOrder(
+          response.data.departments,
+          departmentTypesOrder,
+          "type"
+        );
+        authorDepartment = response.data.departments[0].name;
+      } catch {}
+
+      try {
+        authorInstitution = response.data.institutions[0].name;
+      } catch {}
+
       const authorInfo = {
         avatar:
-          response.data.picture || response.data.sex === "f"
-            ? avatarFemale
-            : avatarMale,
+          response.data.picture ||
+          (response.data.sex === "f" ? avatarFemale : avatarMale),
         first: response.data.first,
         last: response.data.last,
-        rank:
-          authorRankMapper[response.data.rank.toLowerCase()] ||
-          response.data.rank,
-        department: response.data.departments[0].name,
-        institution: response.data.institutions[0].name,
-        contact: response.data.contact.filter(
-          contact => contact.type !== "Institution ID"
-        )
+        rank: authorRank,
+        department: authorDepartment,
+        institution: authorInstitution,
+        contact: response.data.contact
       };
 
       // 3. processing contacts (adding icons and modifying text and address)
@@ -230,4 +264,4 @@ class UserInfo extends Component {
   }
 }
 
-export default UserInfo;
+export default AuthorInfo;

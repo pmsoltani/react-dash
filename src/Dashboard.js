@@ -6,7 +6,7 @@ import axios from "axios";
 // components
 import Papers from "./Papers";
 import ScoreCards from "./ScoreCards";
-import UserInfo from "./UserInfo";
+import AuthorInfo from "./AuthorInfo";
 
 // other assets
 import "./Dashboard.css";
@@ -122,7 +122,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="dashboard-container">
-        <UserInfo authorID={this.props.authorID} />
+        <AuthorInfo authorID={this.props.authorID} />
         <Tabs
           defaultActiveKey="1"
           activeKey={this.state.activePane}
