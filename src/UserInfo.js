@@ -61,21 +61,33 @@ class UserInfo extends Component {
       const response = await axios.get(`/a/${this.props.authorID}`);
 
       // 2. re-shape the data and add new entities (such as default avatar)
+      let authorRank, authorDepartment, authorInstitution;
+      try {
+        if (Object.values(authorRankMapper).includes(response.data.rank)) {
+          authorRank = response.data.rank;
+        } else {
+          authorRank = authorRankMapper[response.data.rank.toLowerCase()];
+        }
+      } catch {}
+
+      try {
+        authorDepartment = response.data.departments[0].name;
+      } catch {}
+
+      try {
+        authorInstitution = response.data.institutions[0].name;
+      } catch {}
+
       const authorInfo = {
         avatar:
-          response.data.picture || response.data.sex === "f"
-            ? avatarFemale
-            : avatarMale,
+          response.data.picture ||
+          (response.data.sex === "f" ? avatarFemale : avatarMale),
         first: response.data.first,
         last: response.data.last,
-        rank:
-          authorRankMapper[response.data.rank.toLowerCase()] ||
-          response.data.rank,
-        department: response.data.departments[0].name,
-        institution: response.data.institutions[0].name,
-        contact: response.data.contact.filter(
-          contact => contact.type !== "Institution ID"
-        )
+        rank: authorRank,
+        department: authorDepartment,
+        institution: authorInstitution,
+        contact: response.data.contact
       };
 
       // 3. processing contacts (adding icons and modifying text and address)
