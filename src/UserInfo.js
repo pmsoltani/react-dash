@@ -36,6 +36,23 @@ const authorRankMapper = {
   emeritus: "Professor Emeritus"
 };
 
+const departmentTypesOrder = [
+  "Department",
+  "Faculty",
+  "Research Center",
+  "Center of Excellence",
+  "Education Center"
+];
+
+const mapOrder = (array, order, key) => {
+  array.sort((a, b) => {
+    const A = a[key];
+    const B = b[key];
+    return order.indexOf(A) > order.indexOf(B) ? 1 : -1;
+  });
+  return array;
+};
+
 class UserInfo extends Component {
   constructor(props) {
     super(props);
@@ -71,6 +88,11 @@ class UserInfo extends Component {
       } catch {}
 
       try {
+        response.data.departments = mapOrder(
+          response.data.departments,
+          departmentTypesOrder,
+          "type"
+        );
         authorDepartment = response.data.departments[0].name;
       } catch {}
 
