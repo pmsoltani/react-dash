@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Icon, Card, Tabs } from "antd";
 import { Container, Row, Col } from "react-grid-system";
+import axios from "axios";
 import "./ScoreCards.css";
 import AmMixedChart from "./AmMixedChart";
 import AmChordChart from "./AmChordChart";
@@ -8,16 +9,17 @@ import AmWordCloud from "./AmWordCloud";
 import AmPieChart from "./AmPieChart";
 import StatsCard from "./StatsCard";
 
-import citations from "./assets/citations.svg";
-import papers from "./assets/papers.svg";
-import article from "./assets/article.svg";
-import review from "./assets/review.svg";
-import conferencePaper from "./assets/conferencePaper.svg";
-import book from "./assets/book.svg";
-import singleAuthor from "./assets/singleAuthor.svg";
-import natCollaboration from "./assets/natCollaboration.svg";
-import intlCollaboration from "./assets/intlCollaboration.svg";
-import instCollaboration from "./assets/instCollaboration.svg";
+import citationsIcon from "./assets/citations.svg";
+import papersIcon from "./assets/papers.svg";
+import articleIcon from "./assets/article.svg";
+import reviewIcon from "./assets/review.svg";
+import conferencePaperIcon from "./assets/conferencePaper.svg";
+import bookIcon from "./assets/book.svg";
+// import otherPapersIcon from "./assets/otherPapers.svg";
+import singleAuthorshipIcon from "./assets/singleAuthor.svg";
+import natCollaborationIcon from "./assets/natCollaboration.svg";
+import intlCollaborationIcon from "./assets/intlCollaboration.svg";
+import instCollaborationIcon from "./assets/instCollaboration.svg";
 
 const { TabPane } = Tabs;
 const chartStyles = {
@@ -25,46 +27,13 @@ const chartStyles = {
   height: "300px"
 };
 
-const stats = [
-  { type: "Total Papers", value: 15, icon: papers },
-  { type: "Total Citations", value: 43, icon: citations },
-  { type: "Journal Papers", value: 5, icon: article },
-  {
-    type: "Conference Papers",
-    value: 7,
-    icon: conferencePaper
-  },
-  { type: "Review Papers", value: 2, icon: review },
-  { type: "Books", value: 1, icon: book },
-  { type: "Single Authorship", value: 2, icon: singleAuthor },
-  {
-    type: "Inst. Collaboration",
-    value: 8,
-    icon: instCollaboration
-  },
-  {
-    type: "Nat. Collaboration",
-    value: 1,
-    icon: natCollaboration
-  },
-  {
-    type: "Intl. Collaboration",
-    value: 4,
-    icon: intlCollaboration
-  }
-];
-
 class ScoreCards extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activePane: "2",
-      statsCards: [],
-      sparkStyles: {
-        height: "72px",
-        width: "200px"
-        // margin: "24x -24px 0px -24px"
-      }
+      activePane: "1",
+      stats: {},
+      statsCards: []
     };
 
     this.handleHit = this.handleHit.bind(this);
@@ -72,15 +41,88 @@ class ScoreCards extends Component {
   }
 
   componentDidMount() {
-    this.handleStatsCards();
+    this.fetchAuthorStats();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.activePane === prevState.activePane) {
+    if (
+      prevProps.authorID === this.props.authorID &&
+      this.state.activePane === prevState.activePane
+    ) {
       return;
+    } else if (prevProps.authorID !== this.props.authorID) {
+      console.log("@author change", prevProps.authorID, this.props.authorID);
+      this.fetchAuthorStats();
+    } else if (this.state.activePane !== prevState.activePane) {
+      console.log("@tab change", prevState.activePane, this.state.activePane);
+      this.handleStatsCards();
     }
-    console.log("@didupdate", this.state);
-    this.handleStatsCards();
+  }
+
+  async fetchAuthorStats() {
+    try {
+      // 1. fetch the data from API
+      const response = await axios.get(`/a/${this.props.authorID}/stats`);
+      const { papers, paperTypes, collaborations } = response.data;
+
+      // 2. re-shape the data
+      let stats = {
+        papers: [
+          { type: "Total Papers", value: papers.totalPapers, icon: papersIcon },
+          {
+            type: "Total Citations",
+            value: papers.totalCitations,
+            icon: citationsIcon
+          }
+        ],
+        paperTypes: [
+          {
+            type: "Journal Papers",
+            value: paperTypes.article || 0,
+            icon: articleIcon
+          },
+          {
+            type: "Conf. Papers",
+            value: paperTypes.conferencePaper || 0,
+            icon: conferencePaperIcon
+          },
+          {
+            type: "Review Papers",
+            value: paperTypes.review || 0,
+            icon: reviewIcon
+          },
+          { type: "Books", value: paperTypes.book || 0, icon: bookIcon }
+          // { type: "Other", value: paperTypes.book || 0, icon: otherPapersIcon }
+        ],
+        collaborations: [
+          {
+            type: "Single Authorships",
+            value: collaborations.singleAuthorship,
+            icon: singleAuthorshipIcon
+          },
+          {
+            type: "Inst. Collaborations",
+            value: collaborations.instCollaboration,
+            icon: instCollaborationIcon
+          },
+          {
+            type: "Nat. Collaborations",
+            value: collaborations.natCollaboration,
+            icon: natCollaborationIcon
+          },
+          {
+            type: "Intl. Collaborations",
+            value: collaborations.intlCollaboration,
+            icon: intlCollaborationIcon
+          }
+        ]
+      };
+
+      // 3. setting the state to display the data
+      this.setState({ stats: stats }, () => this.handleStatsCards());
+    } catch (e) {
+      this.setState({ stats: {} });
+    }
   }
 
   handleHit(data) {
@@ -88,33 +130,44 @@ class ScoreCards extends Component {
   }
 
   handleTabsChange(key) {
-    this.setState({ activePane: key });
+    this.setState({ activePane: key }, () => {
+      this.handleStatsCards();
+    });
   }
 
   handleStatsCards() {
-    console.log("@statscards", this.state);
+    const activePane = this.state.activePane;
     let items;
     let cards = [];
-    if (this.state.activePane === "1") {
-      console.log("@1");
-      items = [stats[0], stats[1]];
-    } else if (this.state.activePane === "2") {
-      console.log("@2");
-      items = [stats[6], stats[7], stats[8], stats[9]];
-    } else if (this.state.activePane === "3") {
-      console.log("@3");
+    console.log("@handleStatsCards", activePane);
+    if (activePane === "1") {
+      // summary tab
+      items = this.state.stats.papers;
+    } else if (activePane === "2") {
+      // collaborators tab
+      items = this.state.stats.collaborations;
+    } else if (activePane === "3") {
+      // keywords TAB
       items = [];
     } else {
-      console.log("@else");
-      items = [stats[2], stats[3], stats[4], stats[5]];
+      // journals TAB
+      items = items = this.state.stats.paperTypes;
     }
-    console.log("items", items);
+    if (!items) {
+      items = [];
+    }
     for (let item of items) {
       cards = [
         ...cards,
         // <Row>
-        <Col  lg="content" className="hibye" >
-          <StatsCard stats={item} />
+        <Col lg="content" className="hibye">
+          <StatsCard
+            stats={item}
+            style={{
+              width: "260px",
+              marginBottom: "16px"
+            }}
+          />
         </Col>
         // </Row>
       ];
@@ -200,7 +253,7 @@ class ScoreCards extends Component {
           </Col>
 
           <Col lg={4} className="cards-grid">
-            <Row gutterWidth={16} >{this.state.statsCards}</Row>
+            <Row gutterWidth={16}>{this.state.statsCards}</Row>
           </Col>
         </Row>
       </Container>
