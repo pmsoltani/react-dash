@@ -25,9 +25,11 @@ class AmMixedChart extends Component {
   async fetchMixedChart() {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/trend`);
-      this.makeMixedChart(response.data);
+      this.chart = this.makeMixedChart(
+        response.data.sort((a, b) => (a.year > b.year ? 1 : -1))
+      );
     } catch (e) {
-      console.log(e);
+      this.chart = this.makePieChart([]);
     }
   }
 
@@ -153,7 +155,7 @@ class AmMixedChart extends Component {
   }
 
   handleHit(data) {
-    this.props.callback({year: data.year});
+    this.props.callback({ year: data.year });
   }
 
   componentWillUnmount() {
