@@ -1,57 +1,139 @@
 import React, { Component } from "react";
-import { Icon, Card, Tabs, Typography } from "antd";
+import { Icon, Card, Tabs } from "antd";
 import { Container, Row, Col } from "react-grid-system";
 import "./ScoreCards.css";
 import AmMixedChart from "./AmMixedChart";
 import AmChordChart from "./AmChordChart";
 import AmWordCloud from "./AmWordCloud";
 import AmPieChart from "./AmPieChart";
-import AmSparkBar from "./AmSparkBar";
-import AmSparkLine from "./AmSparkLine";
+import StatsCard from "./StatsCard";
 
+import citations from "./assets/citations.svg";
+import papers from "./assets/papers.svg";
+import article from "./assets/article.svg";
+import review from "./assets/review.svg";
+import conferencePaper from "./assets/conferencePaper.svg";
+import book from "./assets/book.svg";
+import singleAuthor from "./assets/singleAuthor.svg";
+import natCollaboration from "./assets/natCollaboration.svg";
+import intlCollaboration from "./assets/intlCollaboration.svg";
+import instCollaboration from "./assets/instCollaboration.svg";
 
-const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 const chartStyles = {
   width: "100%",
   height: "300px"
-}
+};
 
-// const sparkStyles = {
-//   height: "100px",
-//   width: "100px",
-//   margin: "15px -15px 0px -15px",
-// };
+const stats = [
+  { type: "Total Papers", value: 15, icon: papers },
+  { type: "Total Citations", value: 43, icon: citations },
+  { type: "Journal Papers", value: 5, icon: article },
+  {
+    type: "Conference Papers",
+    value: 7,
+    icon: conferencePaper
+  },
+  { type: "Review Papers", value: 2, icon: review },
+  { type: "Books", value: 1, icon: book },
+  { type: "Single Authorship", value: 2, icon: singleAuthor },
+  {
+    type: "Inst. Collaboration",
+    value: 8,
+    icon: instCollaboration
+  },
+  {
+    type: "Nat. Collaboration",
+    value: 1,
+    icon: natCollaboration
+  },
+  {
+    type: "Intl. Collaboration",
+    value: 4,
+    icon: intlCollaboration
+  }
+];
 
 class ScoreCards extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      activePane: "2",
+      statsCards: [],
       sparkStyles: {
         height: "72px",
-        width: "200px",
+        width: "200px"
         // margin: "24x -24px 0px -24px"
-      },
+      }
     };
 
     this.handleHit = this.handleHit.bind(this);
+    this.handleTabsChange = this.handleTabsChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleStatsCards();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.activePane === prevState.activePane) {
+      return;
+    }
+    console.log("@didupdate", this.state);
+    this.handleStatsCards();
   }
 
   handleHit(data) {
-    this.props.callback(data)
+    this.props.callback(data);
+  }
+
+  handleTabsChange(key) {
+    this.setState({ activePane: key });
+  }
+
+  handleStatsCards() {
+    console.log("@statscards", this.state);
+    let items;
+    let cards = [];
+    if (this.state.activePane === "1") {
+      console.log("@1");
+      items = [stats[0], stats[1]];
+    } else if (this.state.activePane === "2") {
+      console.log("@2");
+      items = [stats[6], stats[7], stats[8], stats[9]];
+    } else if (this.state.activePane === "3") {
+      console.log("@3");
+      items = [];
+    } else {
+      console.log("@else");
+      items = [stats[2], stats[3], stats[4], stats[5]];
+    }
+    console.log("items", items);
+    for (let item of items) {
+      cards = [
+        ...cards,
+        // <Row>
+        <Col  lg="content" className="hibye" >
+          <StatsCard stats={item} />
+        </Col>
+        // </Row>
+      ];
+    }
+    this.setState({ statsCards: cards });
   }
 
   render() {
     return (
       <Container fluid className="container score-cards">
         <Row gutterWidth={16} className="cards-row">
-          <Col xs={8}>
+          <Col lg={8}>
             <Card hoverable>
               <Tabs
-                defaultActiveKey="1"
+                defaultActiveKey={this.state.activePane}
                 size="small"
                 animated={{ tabPane: false }}
                 tabPosition="left"
+                onChange={this.handleTabsChange}
               >
                 <TabPane
                   tab={
@@ -117,76 +199,8 @@ class ScoreCards extends Component {
             </Card>
           </Col>
 
-          <Col xs={4} className="cards-grid">
-            <Row className="cards-grid-row">
-              <Col>
-                <Card hoverable bordered={false} className="score-card papers">
-                  <Row nogutter style={{ justifyContent: "space-between" }}>
-                    <Col xs="content">
-                      <AmSparkBar style={this.state.sparkStyles} />
-                    </Col>
-                    <Col xs={4}>
-                      <Title level={2}>16</Title>
-                      <Text>papers this year</Text>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="cards-grid-row">
-              <Col>
-                <Card
-                  hoverable
-                  bordered={false}
-                  className="score-card citations"
-                >
-                  <Row nogutter style={{ justifyContent: "space-between" }}>
-                    <Col xs="content">
-                      <AmSparkLine style={this.state.sparkStyles} />
-                    </Col>
-                    <Col xs={4}>
-                      <Title level={2}>386</Title>
-                      <Text>citations this year</Text>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-            <Row className="cards-grid-row">
-              <Col>
-                <Card
-                  hoverable
-                  bordered={false}
-                  className="score-card national"
-                >
-                  <Row nogutter style={{ justifyContent: "space-between" }}>
-                    <Col xs="content"></Col>
-                    <Col xs={4}>
-                      <Title level={2}>5</Title>
-                      <Text>nat. collaborators</Text>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-
-            {/* <Row>
-              <Col>
-                <Card
-                  hoverable
-                  bordered={false}
-                  className="score-card international"
-                >
-                  <Row nogutter style={{ justifyContent: "space-between" }}>
-                    <Col xs="content"></Col>
-                    <Col xs={4}>
-                      <Title level={2}>3</Title>
-                      <Text>int. collaborators</Text>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row> */}
+          <Col lg={4} className="cards-grid">
+            <Row gutterWidth={16} >{this.state.statsCards}</Row>
           </Col>
         </Row>
       </Container>

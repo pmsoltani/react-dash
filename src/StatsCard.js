@@ -52,10 +52,8 @@ class StatsCard extends Component {
         hoverable
         bordered
         style={{
-          width: "300px",
-          margin: "auto",
-          marginTop: "8px",
-          marginBottom: "8px"
+          width: "260px",
+          marginBottom: "16px"
         }}
         size="default"
       >
