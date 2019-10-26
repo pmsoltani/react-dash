@@ -25,6 +25,7 @@ class AmPieChart extends Component {
   async fetchPieChart() {
     try {
       const response = await axios.get(`/a/${this.props.authorID}/jmetrics`);
+      const undefinedCategory = response.data[response.data.length - 1];
       let chartData = response.data
         .filter(q => q.name !== "undefined")
         .map(q => ({
@@ -34,13 +35,15 @@ class AmPieChart extends Component {
         .filter(q => q.value);
 
       chartData[0].pulled = true;
-      chartData = [
-        ...chartData,
-        {
-          rank: "undefined",
-          value: response.data[response.data.length - 1].value
-        }
-      ];
+      if (undefinedCategory.value) {
+        chartData = [
+          ...chartData,
+          {
+            rank: undefinedCategory.name,
+            value: undefinedCategory.value
+          }
+        ];
+      }
 
       this.chart = this.makePieChart(chartData);
     } catch (e) {
