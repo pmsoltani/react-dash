@@ -8,6 +8,9 @@ import Papers from "./Papers";
 import ScoreCards from "./ScoreCards";
 import AuthorInfo from "./AuthorInfo";
 
+// env variables
+import apiUrl from "./env";
+
 // other assets
 import "./Dashboard.css";
 
@@ -81,9 +84,10 @@ class Dashboard extends Component {
 
     try {
       // 2. fetch the data from a certain API endpoint
-      const response = await axios.get(`/a/${this.props.authorID}/papers`, {
-        params: params
-      });
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/papers`,
+        { params: params }
+      );
 
       // 3. re-shape the received data to be shown by 'Papers' component
       const tableData = response.data.map((paper, idx) => ({

@@ -1,6 +1,10 @@
+// libraries
 import React, { Component } from "react";
 import { AutoComplete } from "antd";
 import axios from "axios";
+
+// env variables
+import apiUrl from "./env";
 
 const { Option } = AutoComplete;
 
@@ -26,7 +30,7 @@ class AuthorSearch extends Component {
     try {
       this.setState({ authorsListFiltered: initMessage });
 
-      const response = await axios.get("/a/list");
+      const response = await axios.get(`${apiUrl}/a/list`);
       const authorsList = response.data.map(opt => (
         <Option
           key={opt.idFrontend}

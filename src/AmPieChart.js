@@ -1,9 +1,14 @@
+// libraries
 import React, { Component } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
 
+// env variables
+import apiUrl from "./env";
+
+// animating the chart
 am4core.useTheme(am4themes_animated);
 
 // Data format
@@ -24,7 +29,9 @@ class AmPieChart extends Component {
 
   async fetchPieChart() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/jmetrics`);
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/jmetrics`
+      );
       const undefinedCategory = response.data[response.data.length - 1];
       let chartData = response.data
         .filter(q => q.name !== "undefined")
