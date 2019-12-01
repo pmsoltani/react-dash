@@ -1,6 +1,11 @@
 # stage 1: install dependencies and build the app
 FROM node:12.2.0-alpine as build
 
+ARG REACT_APP_ENV
+ARG REACT_APP_DOMAIN_PROD
+ARG REACT_APP_DOMAIN_STAG
+ARG REACT_APP_DOMAIN_DEV
+
 WORKDIR /react-dash
 
 ENV PATH /app/node_modules/.bin:$PATH
