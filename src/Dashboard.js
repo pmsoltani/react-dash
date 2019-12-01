@@ -9,7 +9,7 @@ import ScoreCards from "./ScoreCards";
 import AuthorInfo from "./AuthorInfo";
 
 // env variables
-import apiUrl from "./env";
+import { apiUrl } from "./env";
 
 // other assets
 import "./Dashboard.css";

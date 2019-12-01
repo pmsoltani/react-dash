@@ -7,7 +7,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
 
 // env variables
-import apiUrl from "./env";
+import { apiUrl } from "./env";
 
 // animating the chart
 am4core.useTheme(am4themes_animated);

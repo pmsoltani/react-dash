@@ -4,7 +4,7 @@ import { AutoComplete } from "antd";
 import axios from "axios";
 
 // env variables
-import apiUrl from "./env";
+import { apiUrl } from "./env";
 
 const { Option } = AutoComplete;
 

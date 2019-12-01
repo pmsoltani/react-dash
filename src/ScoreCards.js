@@ -13,7 +13,7 @@ import AmPieChart from "./AmPieChart";
 import StatsCard from "./StatsCard";
 
 // env variables
-import apiUrl from "./env";
+import { apiUrl } from "./env";
 
 // other assets
 import citationsIcon from "./assets/citations.svg";

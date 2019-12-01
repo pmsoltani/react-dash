@@ -16,7 +16,7 @@ import avatarMale from "./assets/profile-male.svg";
 import avatarFemale from "./assets/profile-female.svg";
 
 // env variables
-import apiUrl from "./env";
+import { apiUrl } from "./env";
 
 const { Title, Text } = Typography;
 
