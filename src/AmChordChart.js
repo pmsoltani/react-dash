@@ -5,6 +5,9 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
 
+// env variables
+import apiUrl from "./env";
+
 // animating the chart
 am4core.useTheme(am4themes_animated);
 
@@ -27,7 +30,9 @@ class AmChordChart extends Component {
   async fetchChordChart() {
     try {
       // 1. fetch the chart data from API
-      const response = await axios.get(`/a/${this.props.authorID}/network`);
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/network`
+      );
 
       // 2. re-shaping the retrieved data
       const chartData = response.data.map(item => {

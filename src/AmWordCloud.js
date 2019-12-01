@@ -1,9 +1,14 @@
+// libraries
 import React, { Component } from "react";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4plugins_wordCloud from "@amcharts/amcharts4/plugins/wordCloud";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
 
+// env variables
+import apiUrl from "./env";
+
+// animating the chart
 am4core.useTheme(am4themes_animated);
 
 const maxWordCount = 40; // max number of words that chart displays
@@ -26,7 +31,9 @@ class AmWordCloud extends Component {
 
   async fetchWordCloud() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/keywords`);
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/keywords`
+      );
       if (response.data.length > maxWordCount) {
         response.data
           .sort((key1, key2) => (key1.value < key2.value ? 1 : -1))

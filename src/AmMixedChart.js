@@ -4,6 +4,9 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
 
+// env variables
+import apiUrl from "./env";
+
 am4core.useTheme(am4themes_animated);
 
 // Data format
@@ -24,7 +27,9 @@ class AmMixedChart extends Component {
 
   async fetchMixedChart() {
     try {
-      const response = await axios.get(`/a/${this.props.authorID}/trend`);
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/trend`
+      );
       this.chart = this.makeMixedChart(
         response.data.sort((a, b) => (a.year > b.year ? 1 : -1))
       );

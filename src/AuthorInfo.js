@@ -15,6 +15,9 @@ import scopusLogo from "./assets/scopus.svg";
 import avatarMale from "./assets/profile-male.svg";
 import avatarFemale from "./assets/profile-female.svg";
 
+// env variables
+import apiUrl from "./env";
+
 const { Title, Text } = Typography;
 
 // used to add icons and appropriate texts to each contact
@@ -75,7 +78,7 @@ class AuthorInfo extends Component {
   async fetchAuthorInfo() {
     try {
       // 1. fetch the data from API
-      const response = await axios.get(`/a/${this.props.authorID}`);
+      const response = await axios.get(`${apiUrl}/a/${this.props.authorID}`);
 
       // 2. re-shape the data and add new entities (such as default avatar)
       let authorRank, authorDepartment, authorInstitution;

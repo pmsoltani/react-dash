@@ -1,15 +1,21 @@
+// libraries
 import React, { Component } from "react";
 import { Icon, Card, Tabs } from "antd";
 import { Container, Row, Col } from "react-grid-system";
 import axios from "axios";
 import "./ScoreCards.css";
 
+// components
 import AmMixedChart from "./AmMixedChart";
 import AmChordChart from "./AmChordChart";
 import AmWordCloud from "./AmWordCloud";
 import AmPieChart from "./AmPieChart";
 import StatsCard from "./StatsCard";
 
+// env variables
+import apiUrl from "./env";
+
+// other assets
 import citationsIcon from "./assets/citations.svg";
 import papersIcon from "./assets/papers.svg";
 import articleIcon from "./assets/article.svg";
@@ -78,7 +84,9 @@ class ScoreCards extends Component {
   async fetchAuthorStats() {
     try {
       // 1. fetch the data from API
-      const response = await axios.get(`/a/${this.props.authorID}/stats`);
+      const response = await axios.get(
+        `${apiUrl}/a/${this.props.authorID}/stats`
+      );
 
       // 2. re-shape the data
       let stats = {};
