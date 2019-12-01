@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+
+# Distribution / packaging
+node_modules
+build
+
+# Unit test / coverage reports
+
+# Environments
+.env
+
+# misc
+.DS_Store
+thumbs.db
+.vscode/
+data/
+logs/
+
+# config
+config.json
+config.ini
