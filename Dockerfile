@@ -14,9 +14,8 @@ ARG REACT_APP_DOMAIN_STAG
 ARG REACT_APP_DOMAIN_DEV
 
 COPY . .
-# EXPOSE 3000
-# RUN npm run build
-CMD ["npm", "start"]
+
+RUN npm run build
 
 # stage 2: copy the built app and run the nginx server
 FROM nginx:1.16.0-alpine
